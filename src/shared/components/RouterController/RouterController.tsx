@@ -15,6 +15,10 @@ export const RouterController = () => {
             <Route path='/login' element={!user.auth ? <Login /> : <Navigate to={"/experiences"} />} />
 
             <Route element={<RequireAuth />}>
+                <Route path='/' element={<Navigate to={"/experiences"} />} />
+            </Route>
+
+            <Route element={<RequireAuth />}>
                 <Route path='experiences/*' element={<Experiences />} />
             </Route>
 

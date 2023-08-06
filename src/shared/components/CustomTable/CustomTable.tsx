@@ -30,10 +30,9 @@ export const CustomTable = ({
                 emptyMessage="No se han encontrado resultados"
                 value={data} 
                 paginator 
-                rows={5} 
-                rowsPerPageOptions={[5, 10, 25, 50]} 
+                rows={10} 
                 tableStyle={{
-                    width: sidebarView ? "calc(100vw - 175px)" : "100vw"
+                    width: sidebarView ? "calc(100vw - 175px)" : "100vw",
                 }}
                 filterDisplay={filterDisplay}
                 style={style}

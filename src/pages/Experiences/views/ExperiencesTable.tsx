@@ -1,4 +1,4 @@
-import { Flex, Text, useToast } from '@chakra-ui/react';
+import { useToast } from '@chakra-ui/react';
 import { Column } from 'primereact/column';
 import { useEffect, useState } from 'react';
 import { getExperiences } from '../../../shared/middlewares/experiences.middleware';
@@ -6,6 +6,12 @@ import { AxiosResponse } from 'axios';
 import { toastNotify } from '../../../shared/utils/toastNotify';
 import { StatusEnumTypes } from '../../../shared/Types/StatusEnumTypes';
 import { CustomTable } from '../../../shared/components/CustomTable/CustomTable';
+// Components
+import { BadgeElement } from '../../../shared/components/ColumnElements/BadgeElement';
+import { TextElement } from '../../../shared/components/ColumnElements/TextElement';
+import { DateElement } from '../../../shared/components/ColumnElements/DateElement';
+import { ImageElement } from '../../../shared/components/ColumnElements/ImageElement';
+import { PricesElements } from '../../../shared/components/ColumnElements/PricesElements';
 
 export const ExperiencesTable = () => {
     const toast = useToast();
@@ -29,12 +35,65 @@ export const ExperiencesTable = () => {
             key="title"
             field="title"
             header="Title"
-            body={(rowData: any) =>
-                <Text>
-                    {rowData?.title}
-                </Text>
-            }
-        />
+            body={(rowData: any) => TextElement(
+                {
+                    title: { text: rowData?.title }
+                }
+            )}
+        />,
+        <Column
+            key="subtitle"
+            field="subtitle"
+            header="Subtitle"
+            body={(rowData: any) => TextElement(
+                {
+                    subtitle: {
+                        text: rowData?.subtitle.text,
+                        label: rowData?.subtitle?.label
+                    }
+                }
+            )}
+        />,
+        <Column
+            key="published"
+            field="published"
+            header="Published"
+            body={(rowData: any) => BadgeElement(
+                {
+                    content: rowData?.published,
+                    isTrue: { color: "green", label: "Publicado" },
+                    isFalse: { color: "red", label: "Comming Soon" }
+                }
+            )}
+        />,
+        <Column
+            key="groups"
+            field="groups"
+            header="Grupo"
+            body={(rowData: any) => PricesElements(
+                {
+                    groups: rowData.groups,
+                    groupType: "group"
+                }
+            )}
+        />,
+        <Column
+            key="private"
+            field="groups"
+            header="Privado"
+            body={(rowData: any) => PricesElements(
+                {
+                    groups: rowData.groups,
+                    groupType: "private"
+                }
+            )}
+        />,
+        <Column
+            key="createdAt"
+            field="createdAt"
+            header="Fecha de Creacion"
+            body={(rowData: any) => DateElement({ content: rowData?.createdAt })}
+        />,
     ]
 
     return (

@@ -4,6 +4,8 @@ import { useAuthContex } from "../../context/auth.context";
 import { Login } from "../../../pages/Login/Login";
 import { Heading } from "@chakra-ui/react";
 import { Experiences } from "../../../pages/Experiences/Experiences";
+import { Codes } from "../../../pages/Codes/Codes";
+import { Partners } from "../../../pages/Partners/Partners";
 
 export const RouterController = () => {
     const { user } = useAuthContex();
@@ -25,6 +27,10 @@ export const RouterController = () => {
             </Route>
 
             <Route element={<RequireAuth />}>
+                <Route path='events/*' element={<Heading>Events</Heading>} />
+            </Route>
+
+            <Route element={<RequireAuth />}>
                 <Route path='lockers/*' element={<Heading>Lockers</Heading>} />
             </Route>
 
@@ -42,7 +48,11 @@ export const RouterController = () => {
 
 
             <Route element={<RequireAuth />}>
-                <Route path='codes/*' element={<Heading>Codes</Heading>} />
+                <Route path='codes/*' element={<Codes />} />
+            </Route>
+
+            <Route element={<RequireAuth />}>
+                <Route path='partners/*' element={<Partners />} />
             </Route>
 
             <Route element={<RequireAuth />}>

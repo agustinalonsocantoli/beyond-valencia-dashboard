@@ -1,5 +1,5 @@
 // Chakra UI
-import { Flex, Heading, Icon, Toast } from "@chakra-ui/react";
+import { Button, Flex, Heading, Icon, Toast } from "@chakra-ui/react";
 // Icons
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai"
 import { useLocation } from "react-router-dom";
@@ -7,15 +7,18 @@ import { useSidebarView } from "../../context/sidebar.context";
 
 interface Props {
     title: string;
-    onClick?: (e: Event) => void
+    buttons?: {
+        onClick: (e: any) => void;
+        label: string;
+        icon?: any
+    }[];
 }
 
-export const Topbar = ({ 
+export const Topbar = ({
     title,
-    onClick
+    buttons
 }: Props) => {
     const { sidebarView, setSidebarView } = useSidebarView();
-    const location = useLocation();
 
     return (
         <Flex
@@ -23,7 +26,7 @@ export const Topbar = ({
             justifyContent="space-between"
             h="75px"
             w="100%"
-            pl="20px"
+            px="20px"
             borderBottom="1px solid #e2e8f0"
         >
             <Flex
@@ -45,6 +48,15 @@ export const Topbar = ({
                     {title}
                 </Heading>
             </Flex>
+
+            {buttons &&
+                buttons.map(((item: any, index: number) => (
+                    <Button onClick={item.onClick} key={index} gap="5px" alignItems="center">
+                        {item?.label}
+                        {item?.icon && <Icon as={item?.icon} boxSize="20px"/>}
+                    </Button>
+                )))
+            }
         </Flex>
     );
 };

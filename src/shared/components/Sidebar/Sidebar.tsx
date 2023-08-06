@@ -3,8 +3,8 @@ import { Box, Flex, Image, usePrefersReducedMotion, keyframes, Button, useToast 
 import Logo from '../../../assets/logoB.png';
 import { useLocation, useNavigate } from "react-router-dom";
 import { LinkMenu } from "../LinkMenu/LinkMenu";
-import { MdAirplaneTicket } from "react-icons/md"
-import { BiTrip } from "react-icons/bi"
+import { MdAirplaneTicket, MdGroups } from "react-icons/md"
+import { BiTrip, BiSlideshow } from "react-icons/bi"
 import { IoFastFoodOutline } from "react-icons/io5"
 import { GiLockers, GiDutchBike } from "react-icons/gi"
 import { LiaCreditCardSolid, LiaQrcodeSolid } from "react-icons/lia"
@@ -59,6 +59,12 @@ export const Sidebar = () => {
             active: activePath("/food")
         },
         {
+            path: "/events",
+            icon: BiSlideshow,
+            label: "Events",
+            active: activePath("/events")
+        },
+        {
             path: "/lockers",
             icon: GiLockers,
             label: "Lockers",
@@ -87,6 +93,12 @@ export const Sidebar = () => {
             icon: LiaQrcodeSolid,
             label: "Codes",
             active: activePath("/codes")
+        },
+        {
+            path: "/partners",
+            icon: MdGroups,
+            label: "Partners",
+            active: activePath("/partners")
         }
     ]
 
@@ -113,7 +125,7 @@ export const Sidebar = () => {
 
                 <Flex 
                     direction="column"
-                    gap="20px"
+                    gap="15px"
                     mt="20px"
                 >
                     {ItemsMenu?.map((link: ItemsMenuInt, index: number) => (
@@ -134,7 +146,6 @@ export const Sidebar = () => {
                     fontWeight="normal"
                     w="70%"
                     mx="auto"
-                    mb="30px"
                     onClick={() => logout(navigate, toast)}
                 >
                     Cerrar Sesión

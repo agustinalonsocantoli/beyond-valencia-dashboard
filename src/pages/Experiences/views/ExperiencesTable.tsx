@@ -1,7 +1,7 @@
 import { useToast } from '@chakra-ui/react';
 import { Column } from 'primereact/column';
 import { useEffect, useState } from 'react';
-import { getExperiences } from '../../../shared/middlewares/experiences.middleware';
+import { deleteExperiences, getExperiences } from '../../../shared/middlewares/experiences.middleware';
 import { AxiosResponse } from 'axios';
 import { toastNotify } from '../../../shared/utils/toastNotify';
 import { StatusEnumTypes } from '../../../shared/Types/StatusEnumTypes';
@@ -12,9 +12,18 @@ import { TextElement } from '../../../shared/components/ColumnElements/TextEleme
 import { DateElement } from '../../../shared/components/ColumnElements/DateElement';
 import { ImageElement } from '../../../shared/components/ColumnElements/ImageElement';
 import { PricesElements } from '../../../shared/components/ColumnElements/PricesElements';
+import { ActionsElements } from '../../../shared/components/ColumnElements/ActionsElements';
+import { ExperiencesModalForm } from '../components/ModalForm';
+import { useNavigate } from 'react-router-dom';
 
-export const ExperiencesTable = () => {
+interface Props {
+    isOpen: boolean;
+    onClose: () => void;
+}
+
+export const ExperiencesTable = ({ isOpen, onClose }: Props) => {
     const toast = useToast();
+    const navigate = useNavigate();
     const [experiences, setExperiences] = useState<any>();
     const [refreshTable, setRefreshTable] = useState<boolean>(true);
 
@@ -24,11 +33,20 @@ export const ExperiencesTable = () => {
                 .then((response: AxiosResponse) => {
                     setExperiences(response?.data?.data);
                     setRefreshTable(false)
-                    console.log(response?.data?.data);
                 })
                 .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte."))
 
     }, [refreshTable])
+
+    const onRowClick = async (e: any) =>
+    navigate("/experiences/" + e.data?.slug);
+
+    const deleteExperience = (slug: string) => {
+        slug &&
+            deleteExperiences(slug)
+            .then(() => toastNotify(toast, StatusEnumTypes.SUCCESS, "Experience borrada con exito"))
+            .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error al borrar Experience"))
+    }
 
     const columns = [
         <Column
@@ -94,12 +112,35 @@ export const ExperiencesTable = () => {
             header="Fecha de Creacion"
             body={(rowData: any) => DateElement({ content: rowData?.createdAt })}
         />,
+        <Column
+            key=""
+            field=""
+            header=""
+            body={(rowData) => ActionsElements({
+                remove: {
+                    onClick: () => {
+                        deleteExperience(rowData?.slug);
+                        setRefreshTable(true);
+                    },
+                }
+            })}
+        />
     ]
 
     return (
-        <CustomTable
-            data={experiences}
-            columns={columns}
-        />
+        <>
+            <CustomTable
+                data={experiences}
+                columns={columns}
+                onRowClick={onRowClick}
+            />
+
+
+            <ExperiencesModalForm
+                isOpen={isOpen}
+                onClose={onClose}
+                setRefresh={setRefreshTable}
+            />
+        </>
     );
 }

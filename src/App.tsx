@@ -4,7 +4,7 @@ import { Box, ChakraProvider, Flex } from '@chakra-ui/react'
 import "primereact/resources/themes/lara-light-indigo/theme.css";
 import "primereact/resources/primereact.min.css";
 // React
-import { BrowserRouter as Router, Routes, Route, Navigate, useNavigate } from 'react-router-dom';
+import { BrowserRouter as Router } from 'react-router-dom';
 import { RouterController } from './shared/components/RouterController/RouterController';
 import { AuthContext } from './shared/context/auth.context';
 import { useEffect, useState } from 'react';

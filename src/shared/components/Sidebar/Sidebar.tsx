@@ -10,6 +10,7 @@ import { GiLockers, GiDutchBike } from "react-icons/gi"
 import { LiaCreditCardSolid, LiaQrcodeSolid } from "react-icons/lia"
 import { ImFilePicture } from "react-icons/im"
 import { useAuthContex } from "../../context/auth.context";
+import { UserActions } from "../User/UserActions";
 
 interface ItemsMenuInt {
     path: string;
@@ -139,17 +140,8 @@ export const Sidebar = () => {
                     ))}
                 </Flex>
             </Flex>
-
-                <Button 
-                    colorScheme="blue"
-                    fontSize="13px"
-                    fontWeight="normal"
-                    w="70%"
-                    mx="auto"
-                    onClick={() => logout(navigate, toast)}
-                >
-                    Cerrar Sesión
-                </Button>
+            
+                <UserActions />
         </Flex>
     );
 };

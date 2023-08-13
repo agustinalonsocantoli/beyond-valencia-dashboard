@@ -51,7 +51,14 @@ export const Topbar = ({
 
             {buttons &&
                 buttons.map(((item: any, index: number) => (
-                    <Button onClick={item.onClick} key={index} gap="5px" alignItems="center">
+                    <Button 
+                        onClick={item.onClick} 
+                        key={index} 
+                        gap="5px" 
+                        alignItems="center"
+                        bg={"rgba(50, 212, 164, .50)"}
+                        _hover={{ bg: "rgba(50, 212, 164, .25)"}}
+                    >
                         {item?.label}
                         {item?.icon && <Icon as={item?.icon} boxSize="20px"/>}
                     </Button>

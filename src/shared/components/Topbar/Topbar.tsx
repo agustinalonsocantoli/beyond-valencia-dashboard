@@ -1,8 +1,7 @@
 // Chakra UI
-import { Button, Flex, Heading, Icon, Toast } from "@chakra-ui/react";
+import { Button, Flex, Heading, Icon, Text, Toast } from "@chakra-ui/react";
 // Icons
 import { AiOutlineMenuFold, AiOutlineMenuUnfold } from "react-icons/ai"
-import { useLocation } from "react-router-dom";
 import { useSidebarView } from "../../context/sidebar.context";
 
 interface Props {
@@ -10,7 +9,9 @@ interface Props {
     buttons?: {
         onClick: (e: any) => void;
         label: string;
-        icon?: any
+        icon?: any;
+        isDisabled?: boolean;
+        requiredText?: string;
     }[];
 }
 
@@ -51,17 +52,25 @@ export const Topbar = ({
 
             {buttons &&
                 buttons.map(((item: any, index: number) => (
-                    <Button 
-                        onClick={item.onClick} 
-                        key={index} 
-                        gap="5px" 
-                        alignItems="center"
-                        bg={"rgba(50, 212, 164, .50)"}
-                        _hover={{ bg: "rgba(50, 212, 164, .25)"}}
-                    >
-                        {item?.label}
-                        {item?.icon && <Icon as={item?.icon} boxSize="20px"/>}
-                    </Button>
+                    <Flex direction="column" justifyContent="center" alignItems="center">
+                        <Button 
+                            onClick={item.onClick} 
+                            key={index} 
+                            gap="5px" 
+                            alignItems="center"
+                            bg={"rgba(50, 212, 164, .50)"}
+                            _hover={{ bg: "rgba(50, 212, 164, .25)"}}
+                            isDisabled={item?.isDisabled}
+                        >
+                            {item?.label}
+                            {item?.icon && <Icon as={item?.icon} boxSize="20px"/>}
+                        </Button>
+                        {(item?.requiredText && item?.isDisabled) &&
+                            <Text color="red" fontSize="13px">
+                                {item?.requiredText}
+                            </Text>
+                        }
+                    </Flex>
                 )))
             }
         </Flex>

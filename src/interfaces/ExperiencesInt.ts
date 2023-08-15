@@ -1,16 +1,16 @@
-interface MultimediaInt {
+export interface MultimediaInt {
     src: string;
     type: string;
 }
 
-interface OrdersGroupsInt {
+export interface OrdersGroupsInt {
     title: string;
     type: string;
     prices: PricesInt
     deapertureTime: string[];
 }
 
-interface PricesInt {
+export interface PricesInt {
     adults: number;
     children: number | null;
 }

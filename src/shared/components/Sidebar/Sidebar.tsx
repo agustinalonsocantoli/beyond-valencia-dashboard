@@ -126,7 +126,7 @@ export const Sidebar = () => {
 
                 <Flex 
                     direction="column"
-                    gap="15px"
+                    gap="10px"
                     mt="20px"
                 >
                     {ItemsMenu?.map((link: ItemsMenuInt, index: number) => (

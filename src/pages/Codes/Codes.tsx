@@ -28,7 +28,6 @@ export const Codes = () => {
                 .then((response: AxiosResponse) => {
                     setCodes(response?.data?.data);
                     setRefreshTable(false)
-                    console.log(response?.data?.data);
                 })
                 .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte"))
 

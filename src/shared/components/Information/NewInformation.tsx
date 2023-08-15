@@ -1,14 +1,47 @@
-import { Box, Flex, FormLabel, Icon, Input, Textarea } from "@chakra-ui/react";
-import { RxCross1 } from "react-icons/rx"
+import { Box, Button, Flex, FormLabel, Icon, Input, Textarea, useDisclosure, useToast } from "@chakra-ui/react";
 import { InformationSelect } from "../Elements/InformationSelect";
-import { BiSolidMinusCircle, BiSolidPlusCircle } from "react-icons/bi";
+import { BiEdit, BiSolidMinusCircle, BiSolidPlusCircle } from "react-icons/bi";
+import { toastNotify } from "../../utils/toastNotify";
+import { StatusEnumTypes } from "../../Types/StatusEnumTypes";
+import { useEffect, useState } from "react";
+import { OrdersGroupsInt } from "../../../interfaces/ExperiencesInt";
+import { EditGroupModal } from "../Modals/EditGroupModal";
+import { validateNewExperience } from "../../utils/validateData";
 
 interface Props {
-    currentValue: any,
-    setCurrentValue: (action: any) => void;
+    newValue: any;
+    setNewValue: (action: any) => void;
+    setIsDisabled: (action: boolean) => void;
 }
 
-export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
+export const NewInformation = ({ newValue, setNewValue, setIsDisabled }: Props) => {
+    const toast = useToast();
+    const { isOpen, onOpen, onClose } = useDisclosure();
+    const [groupEdit, setGroupsEdit] = useState<{
+        selectGroup: OrdersGroupsInt;
+        index: number;
+    }>();
+
+    useEffect(() => {
+        setNewValue((prev: any) => ({
+            ...prev,
+            highlights: [],
+            included: [],
+            groups:[],
+            multimedia: [
+                { src: '', type: 'image'},
+                { src: '', type: 'image'},
+                { src: '', type: 'image'},
+                { src: '', type: 'image'},
+            ]
+        }));
+    }, [])
+
+    useEffect(() => {
+        if(validateNewExperience(newValue))
+            setIsDisabled(false)
+
+    }, [newValue])
 
     const handleChange = (e: any) => {
         const { name, value } = e.target;
@@ -17,7 +50,7 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
             name === "label" ||
             name === 'text'
         ) {
-            setCurrentValue((prev: any) => ({
+            setNewValue((prev: any) => ({
                 ...prev,
                 subtitle: {
                     ...prev?.subtitle,
@@ -33,7 +66,7 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
             name === "mobility" ||
             name === "availably"
         ) {
-            setCurrentValue((prev: any) => ({
+            setNewValue((prev: any) => ({
                 ...prev,
                 details: {
                     ...prev?.details,
@@ -43,7 +76,7 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
         } else if (
             name === "pointLink"
         ) {
-            setCurrentValue((prev: any) => ({
+            setNewValue((prev: any) => ({
                 ...prev,
                 details: {
                     ...prev?.details,
@@ -56,7 +89,7 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
         } else if (
             name === "pointLabel"
         ) {
-            setCurrentValue((prev: any) => ({
+            setNewValue((prev: any) => ({
                 ...prev,
                 details: {
                     ...prev?.details,
@@ -68,7 +101,7 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
             }));
         }
         else {
-            setCurrentValue((prev: any) => ({
+            setNewValue((prev: any) => ({
                 ...prev,
                 [name]: value
             }));
@@ -79,12 +112,12 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
         const { name, value } = e.target;
 
         const newHighlights = [
-            ...currentValue?.highlights.slice(0, i),
+            ...newValue?.highlights.slice(0, i),
             value,
-            ...currentValue?.highlights.slice(i + 1)
+            ...newValue?.highlights.slice(i + 1)
         ]
 
-        setCurrentValue((prev: any) => ({
+        setNewValue((prev: any) => ({
             ...prev,
             [name]: newHighlights
         }));
@@ -96,15 +129,15 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
             const { name, value } = e.target;
 
             const newIncluded = [
-                ...currentValue?.included.slice(0, i),
+                ...newValue?.included.slice(0, i),
                 {
-                    ...currentValue?.included[i],
+                    ...newValue?.included[i],
                     text: value
                 },
-                ...currentValue?.included.slice(i + 1)
+                ...newValue?.included.slice(i + 1)
             ]
 
-            setCurrentValue((prev: any) => ({
+            setNewValue((prev: any) => ({
                 ...prev,
                 [name]: newIncluded
             }));
@@ -112,15 +145,15 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
             const { value } = e;
 
             const newIncluded = [
-                ...currentValue?.included.slice(0, i),
+                ...newValue?.included.slice(0, i),
                 {
-                    ...currentValue?.included[i],
+                    ...newValue?.included[i],
                     state: value
                 },
-                ...currentValue?.included.slice(i + 1)
+                ...newValue?.included.slice(i + 1)
             ]
 
-            setCurrentValue((prev: any) => ({
+            setNewValue((prev: any) => ({
                 ...prev,
                 included: newIncluded
             }));
@@ -129,51 +162,51 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
 
     const selectedPublished = (e: any) => {
 
-        setCurrentValue((prev: any) => ({
+        setNewValue((prev: any) => ({
             ...prev,
             published: e.value
         }));
     }
 
     const addHighlights = () => {
-        const newHighlights = [...currentValue?.highlights, '']
+        const newHighlights = [...newValue?.highlights, '']
 
-        setCurrentValue((prev: any) => ({
+        setNewValue((prev: any) => ({
             ...prev,
             highlights: newHighlights
         }));
     }
 
     const deleteHighlights = () => {
-        currentValue?.highlights.pop()
+        newValue?.highlights.pop()
 
-        setCurrentValue((prev: any) => ({
+        setNewValue((prev: any) => ({
             ...prev,
-            highlights: currentValue?.highlights
+            highlights: newValue?.highlights
         }));
     }
 
     const addIncluded = () => {
         const newIncluded = [
-            ...currentValue?.included,
+            ...newValue?.included,
             {
                 text: "",
                 state: true
             }
         ]
 
-        setCurrentValue((prev: any) => ({
+        setNewValue((prev: any) => ({
             ...prev,
             included: newIncluded
         }));
     }
 
     const deleteIncluded = () => {
-        currentValue?.included.pop()
+        newValue?.included.pop()
 
-        setCurrentValue((prev: any) => ({
+        setNewValue((prev: any) => ({
             ...prev,
-            included: currentValue?.included
+            included: newValue?.included
         }));
     }
 
@@ -182,15 +215,15 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
             const { name, value } = e.target;
 
             const newMultimedia = [
-                ...currentValue?.multimedia?.slice(0, i),
+                ...newValue?.multimedia?.slice(0, i),
                 {
-                    ...currentValue?.multimedia[i],
+                    ...newValue?.multimedia[i],
                     src: value
                 },
-                ...currentValue?.multimedia?.slice(i + 1)
+                ...newValue?.multimedia?.slice(i + 1)
             ]
 
-            setCurrentValue((prev: any) => ({
+            setNewValue((prev: any) => ({
                 ...prev,
                 [name]: newMultimedia
             }));
@@ -198,20 +231,74 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
             const { value } = e;
 
             const newMultimedia = [
-                ...currentValue?.multimedia?.slice(0, i),
+                ...newValue?.multimedia?.slice(0, i),
                 {
-                    ...currentValue?.multimedia[i],
+                    ...newValue?.multimedia[i],
                     type: value
                 },
-                ...currentValue?.multimedia?.slice(i + 1)
+                ...newValue?.multimedia?.slice(i + 1)
             ]
-            console.log(newMultimedia);
 
-            setCurrentValue((prev: any) => ({
+            setNewValue((prev: any) => ({
                 ...prev,
                 multimedia: newMultimedia
             }));
         }
+    }
+
+    const selectedGroup = (e: any, i: number) => {
+        const { value, label } = e;
+
+        const newGroup = [
+            ...newValue?.groups.slice(0, i),
+            {
+                ...newValue?.groups[i],
+                title: label,
+                type: value
+            },
+            ...newValue?.groups.slice(i + 1)
+        ]
+
+        setNewValue((prev: any) => ({
+            ...prev,
+            groups: newGroup
+        }));
+
+        if( newValue?.groups[i - 1]?.title === label || newValue?.groups[i - 1]?.type === value ) 
+            toastNotify(toast, StatusEnumTypes.INFO, `El grupo seleccionado ya existe`)
+    }
+
+    const addGroup = () => {
+        if(newValue?.groups?.length < 2){
+            const newGroup = [
+                ...newValue?.groups,
+                {
+                    title: "",
+                    type: "",
+                    prices: {
+                        adults: null,
+                        children: null
+                    },
+                    deapertureTime: []
+                }
+            ]
+
+            setNewValue((prev: any) => ({
+                ...prev,
+                groups: newGroup
+            }));
+        } else {
+            toastNotify(toast, StatusEnumTypes.WARNING, "Llego al limite de grupos")
+        }
+    }
+
+    const deleteGroup = () => {
+        newValue?.groups.pop()
+
+        setNewValue((prev: any) => ({
+            ...prev,
+            groups: newValue?.groups
+        }));
     }
 
     return (
@@ -220,10 +307,6 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
                 <FormLabel>Publicado</FormLabel>
                 <InformationSelect
                     name="published"
-                    defaultValue={{
-                        value: currentValue?.published,
-                        label: currentValue?.published ? "Si" : "No"
-                    }}
                     options={[
                         { value: true, label: "Si" },
                         { value: false, label: "No" }
@@ -237,7 +320,7 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
                 <Input
                     name="slug"
                     onChange={handleChange}
-                    defaultValue={currentValue?.slug}
+                    
                 />
             </Box>
 
@@ -245,22 +328,18 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
                 <FormLabel>Multimedia</FormLabel>
 
                 <Flex direction="column" gap="5px">
-                    {currentValue?.multimedia?.map((item: any, index: number) => (
+                    {newValue?.multimedia?.map((item: any, index: number) => (
                         <Flex alignItems="center" gap="10px" key={index}>
                             <Input
                                 flex="1"
                                 name="multimedia"
                                 onChange={(e: any) => changeImage(e, index)}
-                                defaultValue={item?.src}
+                                
                             />
 
                             <Box flex="1">
                                 <InformationSelect
                                     name="multimediaType"
-                                    defaultValue={{
-                                        value: item.type,
-                                        label: item.type === "image" ? "Imagen" : "Video"
-                                    }}
                                     options={[
                                         { value: "image", label: "Imagen" },
                                         { value: "video", label: "Video" }
@@ -278,7 +357,7 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
                 <Input
                     name="title"
                     onChange={handleChange}
-                    defaultValue={currentValue?.title}
+                    
                 />
             </Box>
 
@@ -288,7 +367,7 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
                     <Input
                         name="label"
                         onChange={handleChange}
-                        defaultValue={currentValue?.subtitle?.label}
+                        
                     />
                 </Box>
 
@@ -297,7 +376,7 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
                     <Input
                         name="text"
                         onChange={handleChange}
-                        defaultValue={currentValue?.subtitle?.text}
+                        
                     />
                 </Box>
             </Flex>
@@ -309,7 +388,7 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
                     resize="none"
                     minH="70px"
                     onChange={handleChange}
-                    defaultValue={currentValue?.headline}
+                    
                 />
             </Box>
 
@@ -320,7 +399,7 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
                     resize="none"
                     minH="100px"
                     onChange={handleChange}
-                    defaultValue={currentValue?.description}
+                    
                 />
             </Box>
 
@@ -328,12 +407,12 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
                 <FormLabel>Highlights</FormLabel>
 
                 <Flex direction="column" gap="5px">
-                    {currentValue?.highlights?.map((item: string, index: number) => (
+                    {newValue?.highlights?.map((item: string, index: number) => (
                         <Input
                             key={index}
                             name="highlights"
                             onChange={(e: any) => changeHighlights(e, index)}
-                            defaultValue={item}
+                            
                         />
                     ))}
                 </Flex>
@@ -359,22 +438,18 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
                 <FormLabel>Included</FormLabel>
 
                 <Flex direction="column" gap="5px">
-                    {currentValue?.included?.map((item: any, index: number) => (
+                    {newValue?.included?.map((item: any, index: number) => (
                         <Flex alignItems="center" gap="10px" key={index}>
                             <Input
                                 flex="1"
                                 name="included"
                                 onChange={(e: any) => changeIncluded(e, index)}
-                                defaultValue={item?.text}
+                                
                             />
 
                             <Box flex="1">
                                 <InformationSelect
                                     name="includedState"
-                                    defaultValue={{
-                                        value: item.state,
-                                        label: item.state ? "Si" : "No"
-                                    }}
                                     options={[
                                         { value: true, label: "Si" },
                                         { value: false, label: "No" }
@@ -410,21 +485,21 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
                     <Input
                         name="age"
                         onChange={handleChange}
-                        defaultValue={currentValue?.details?.age}
+                        
                     />
 
                     <FormLabel>Details Meeting Point Link</FormLabel>
                     <Input
                         name="pointLink"
                         onChange={handleChange}
-                        defaultValue={currentValue?.details?.meetengPoint?.Link}
+                        
                     />
 
                     <FormLabel>Details Meeting Point Label</FormLabel>
                     <Input
                         name="pointLabel"
                         onChange={handleChange}
-                        defaultValue={currentValue?.details?.meetengPoint?.label}
+                        
                     />
                 </Flex>
 
@@ -433,21 +508,21 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
                     <Input
                         name="ticket"
                         onChange={handleChange}
-                        defaultValue={currentValue?.details?.ticket}
+                        
                     />
 
                     <FormLabel>Details Lenguage</FormLabel>
                     <Input
                         name="language"
                         onChange={handleChange}
-                        defaultValue={currentValue?.details?.language}
+                        
                     />
 
                     <FormLabel>Details How long</FormLabel>
                     <Input
                         name="duration"
                         onChange={handleChange}
-                        defaultValue={currentValue?.details?.duration}
+                        
                     />
                 </Flex>
             </Flex>
@@ -458,7 +533,7 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
                     <Input
                         name="accessibility"
                         onChange={handleChange}
-                        defaultValue={currentValue?.details?.accessibility}
+                        
                     />
                 </Box>
 
@@ -467,7 +542,7 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
                     <Input
                         name="mobility"
                         onChange={handleChange}
-                        defaultValue={currentValue?.details?.mobility}
+                        
                     />
                 </Box>
 
@@ -476,10 +551,68 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
                     <Input
                         name="availably"
                         onChange={handleChange}
-                        defaultValue={currentValue?.details?.availably}
+                        
                     />
                 </Box>
             </Flex>
+
+            <Box>
+                <FormLabel>Groups</FormLabel>
+
+                <Flex direction="column" gap="5px">
+                    {newValue?.groups?.map((item: any, index: number) => (
+                        <Flex alignItems="center" gap="20px" key={index}>
+                            <Box w="50%">
+                                <InformationSelect
+                                    name="groups"
+                                    options={[
+                                        { value: 'group', label: "Shared Group" },
+                                        { value: 'private', label: "Private Group" }
+                                    ]}
+                                    onChange={(e: any) => selectedGroup(e, index)}
+                                />
+                            </Box>
+
+                            <Button
+                                w="30%"
+                                onClick={() => {
+                                    setGroupsEdit({
+                                        selectGroup: item,
+                                        index: index
+                                    });
+                                    onOpen();
+                                }} 
+                                display="flex"
+                                key={index} 
+                                gap="5px" 
+                                alignItems="center"
+                                bg={"rgba(50, 212, 164, .50)"}
+                                _hover={{ bg: "rgba(50, 212, 164, .25)"}}
+                            >
+                                Edit group
+                                <Icon as={BiEdit} boxSize="20px"/>
+                            </Button>
+                        </Flex>
+                    ))}
+                </Flex>
+
+                <Flex alignItems="center" gap="5px" mt="10px">
+                    <Icon as={BiSolidPlusCircle}
+                        boxSize="22px"
+                        color="green"
+                        cursor="pointer"
+                        onClick={addGroup}
+                    />
+
+                    <Icon
+                        as={BiSolidMinusCircle}
+                        boxSize="22px"
+                        color="red"
+                        cursor="pointer"
+                        onClick={deleteGroup}
+                    />
+                </Flex>
+            </Box>
 
             <Box>
                 <FormLabel>More about data</FormLabel>
@@ -488,7 +621,7 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
                     resize="none"
                     minH="200px"
                     onChange={handleChange}
-                    defaultValue={currentValue?.information}
+                    
                 />
             </Box>
 
@@ -499,7 +632,7 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
                     resize="none"
                     minH="50px"
                     onChange={handleChange}
-                    defaultValue={currentValue?.policies}
+                    
                 />
             </Box>
 
@@ -510,9 +643,18 @@ export const ShowInformation = ({ currentValue, setCurrentValue }: Props) => {
                     resize="none"
                     minH="100px"
                     onChange={handleChange}
-                    defaultValue={currentValue?.conditions}
+                    
                 />
             </Box>
+
+            <EditGroupModal
+                isOpen={isOpen}
+                onClose={onClose}
+                defaultValue={groupEdit}
+                setCurrentValue={setNewValue}
+                currentValue={newValue}
+                setGroupsEdit={setGroupsEdit}
+            />
         </Flex>
     )
 };

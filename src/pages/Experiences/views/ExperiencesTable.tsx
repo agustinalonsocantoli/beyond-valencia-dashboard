@@ -10,18 +10,11 @@ import { CustomTable } from '../../../shared/components/CustomTable/CustomTable'
 import { BadgeElement } from '../../../shared/components/ColumnElements/BadgeElement';
 import { TextElement } from '../../../shared/components/ColumnElements/TextElement';
 import { DateElement } from '../../../shared/components/ColumnElements/DateElement';
-import { ImageElement } from '../../../shared/components/ColumnElements/ImageElement';
 import { PricesElements } from '../../../shared/components/ColumnElements/PricesElements';
 import { ActionsElements } from '../../../shared/components/ColumnElements/ActionsElements';
-import { ExperiencesModalForm } from '../components/ModalForm';
 import { useNavigate } from 'react-router-dom';
 
-interface Props {
-    isOpen: boolean;
-    onClose: () => void;
-}
-
-export const ExperiencesTable = ({ isOpen, onClose }: Props) => {
+export const ExperiencesTable = () => {
     const toast = useToast();
     const navigate = useNavigate();
     const [experiences, setExperiences] = useState<any>();
@@ -128,19 +121,10 @@ export const ExperiencesTable = ({ isOpen, onClose }: Props) => {
     ]
 
     return (
-        <>
-            <CustomTable
-                data={experiences}
-                columns={columns}
-                onRowClick={onRowClick}
-            />
-
-
-            <ExperiencesModalForm
-                isOpen={isOpen}
-                onClose={onClose}
-                setRefresh={setRefreshTable}
-            />
-        </>
+        <CustomTable
+            data={experiences}
+            columns={columns}
+            onRowClick={onRowClick}
+        />
     );
 }

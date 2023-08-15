@@ -6,16 +6,17 @@ import { AxiosResponse } from "axios";
 import { toastNotify } from "../../../shared/utils/toastNotify";
 import { StatusEnumTypes } from "../../../shared/Types/StatusEnumTypes";
 import { PreviewDetails } from "../../../shared/components/Previews/PreviewDetails";
-import { ShowInformation } from "../../../shared/components/Information/ShowInformation";
+import { EditInformation } from "../../../shared/components/Information/EditInformation";
 import { ExperiencesInt } from "../../../interfaces/ExperiencesInt";
 
 interface Props {
     currentValue: any,
     setCurrentValue: (action: any) => void;
     setSlug: (action: string) => void;
+    setIsDisabled: (action: boolean) => void;
 }
 
-export const ExperiencesInformation = ({ currentValue, setCurrentValue, setSlug }: Props) => {
+export const ExperiencesInformation = ({ currentValue, setCurrentValue, setSlug, setIsDisabled }: Props) => {
     const { slug } = useParams();
     const toast = useToast();
     const [experience, setExperience] = useState<ExperiencesInt>();
@@ -50,9 +51,10 @@ export const ExperiencesInformation = ({ currentValue, setCurrentValue, setSlug 
                 direction="column" 
                 flex="1"
             >
-                <ShowInformation 
+                <EditInformation 
                     currentValue={currentValue}
                     setCurrentValue={setCurrentValue}
+                    setIsDisabled={setIsDisabled}
                 />
             </Flex>
 

@@ -15,22 +15,28 @@ import {
 // Icons
 import { RxCheck, RxCross1 } from "react-icons/rx"
 import { Exporuse } from "./Exposure";
+import { SelectGroup } from "./SelectGroup";
+import { MultimediaInt } from "../../../interfaces/MultimediaInt";
+import { checkImage } from "../../utils/validateData";
 
 interface Props {
     data: any;
 }
 
 export const PreviewDetails = ({ data }: Props) => {
-    return (
 
+    return (
         <Flex direction="column" gap="30px">
-            <Box>
-                <Exporuse 
-                    multimedia={data?.multimedia}
-                    title={data?.title}
-                    width="100%"
-                />
-            </Box>
+
+            {!checkImage(data?.multimedia) && 
+                <Box>
+                    <Exporuse 
+                        multimedia={data?.multimedia}
+                        title={data?.title}
+                        width="100%"
+                    />
+                </Box>
+            }
 
             <Box>
                 <Heading fontSize="25px">{data?.title}</Heading>
@@ -41,23 +47,27 @@ export const PreviewDetails = ({ data }: Props) => {
                 {data?.headline}
             </Text>
 
-            <Box>
-                <Heading mb="5px" fontSize="18px">Overview</Heading>
-                <Text>
-                    {data?.description}
-                </Text>
-            </Box>
+            {data?.description &&
+                <Box>
+                    <Heading mb="5px" fontSize="18px">Overview</Heading>
+                    <Text>
+                        {data?.description}
+                    </Text>
+                </Box>
+            }
 
-            <Box>
-                <Heading mb="5px" fontSize="18px">Highlights</Heading>
-                <List listStyleType="initial" ml="20px">
-                    {data?.highlights?.map((item: string, index: number) => (
-                        <ListItem key={index}>{item}</ListItem>
-                    ))}
-                </List>
-            </Box>
+            {(data?.highlights && data?.highlights?.length > 0) &&
+                <Box>
+                    <Heading mb="5px" fontSize="18px">Highlights</Heading>
+                    <List listStyleType="initial" ml="20px">
+                        {data?.highlights?.map((item: string, index: number) => (
+                            <ListItem key={index}>{item}</ListItem>
+                        ))}
+                    </List>
+                </Box>
+            }
 
-            {(data?.included) &&
+            {(data?.included && data?.included?.length > 0) &&
                 <Box>
                     <Heading mb="5px" fontSize="18px">Included</Heading>
                     <Flex>
@@ -84,38 +94,46 @@ export const PreviewDetails = ({ data }: Props) => {
                 </Box>
             }
 
-            <Box>
-                <Heading mb="5px" fontSize="18px">Details</Heading>
-                <Flex>
-                    <Flex direction="column" gap="10px" flex="1">
-                        <Text><Text as="span" fontWeight="bold">Age:</Text> {data?.details?.age}</Text>
-                        <Text><Text as="span" fontWeight="bold">How long?:</Text> {data?.details?.duration}</Text>
-                        <Text><Text as="span" fontWeight="bold">Ticketing:</Text> {data?.details?.ticket}</Text>
-                        <Text><Text as="span" fontWeight="bold">Availability:</Text> {data?.details?.availably}</Text>
-                        <Text><Text as="span" fontWeight="bold">Lenguage:</Text> {data?.details?.language}</Text>
-                    </Flex>
+            {data?.details &&
+                <Box>
+                    <Heading mb="5px" fontSize="18px">Details</Heading>
+                    <Flex>
+                        <Flex direction="column" gap="10px" flex="1">
+                            <Text><Text as="span" fontWeight="bold">Age:</Text> {data?.details?.age}</Text>
+                            <Text><Text as="span" fontWeight="bold">How long?:</Text> {data?.details?.duration}</Text>
+                            <Text><Text as="span" fontWeight="bold">Ticketing:</Text> {data?.details?.ticket}</Text>
+                            <Text><Text as="span" fontWeight="bold">Availability:</Text> {data?.details?.availably}</Text>
+                            <Text><Text as="span" fontWeight="bold">Lenguage:</Text> {data?.details?.language}</Text>
+                        </Flex>
 
-                    <Flex direction="column" gap="10px" flex="1">
-                        <Text><Text as="span" fontWeight="bold">Meeting Point:</Text> {data?.details?.meetengPoint?.label}</Text>
-                        <Text><Text as="span" fontWeight="bold">Accessibility:</Text> {data?.details?.accessibility}</Text>
-                        <Text><Text as="span" fontWeight="bold">Mobility:</Text> {data?.details?.mobility}</Text>
+                        <Flex direction="column" gap="10px" flex="1">
+                            <Text><Text as="span" fontWeight="bold">Meeting Point:</Text> {data?.details?.meetengPoint?.label}</Text>
+                            <Text><Text as="span" fontWeight="bold">Accessibility:</Text> {data?.details?.accessibility}</Text>
+                            <Text><Text as="span" fontWeight="bold">Mobility:</Text> {data?.details?.mobility}</Text>
+                        </Flex>
                     </Flex>
-                </Flex>
-            </Box>
+                </Box>
+            }
+
+            <SelectGroup
+                groups={data?.groups} 
+            />
 
             <Accordion allowToggle>
-                <AccordionItem>
-                    <AccordionButton>
-                        <Box as="span" flex='1' textAlign='left'>
-                            More about data
-                        </Box>
-                        <AccordionIcon />
-                    </AccordionButton>
+                {data?.information &&
+                    <AccordionItem>
+                        <AccordionButton>
+                            <Box as="span" flex='1' textAlign='left'>
+                                More about data
+                            </Box>
+                            <AccordionIcon />
+                        </AccordionButton>
 
-                    <AccordionPanel>
-                        <p>{data?.information}</p>
-                    </AccordionPanel>
-                </AccordionItem>
+                        <AccordionPanel>
+                            <p>{data?.information}</p>
+                        </AccordionPanel>
+                    </AccordionItem>
+                }
 
                 {data?.policies &&
                     <AccordionItem>
@@ -132,6 +150,7 @@ export const PreviewDetails = ({ data }: Props) => {
                     </AccordionItem>
                 }
 
+                {data?.conditions &&
                 <AccordionItem>
                     <AccordionButton>
                         <Box as="span" flex='1' textAlign='left'>
@@ -144,6 +163,7 @@ export const PreviewDetails = ({ data }: Props) => {
                         <p>{data?.conditions}</p>
                     </AccordionPanel>
                 </AccordionItem>
+                }
             </Accordion>
         </Flex>
     );

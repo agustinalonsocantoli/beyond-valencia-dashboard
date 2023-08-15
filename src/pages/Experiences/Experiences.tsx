@@ -2,60 +2,93 @@ import { Flex, useDisclosure, useToast } from "@chakra-ui/react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { Topbar } from "../../shared/components/Topbar/Topbar";
 import { ExperiencesTable } from "./views/ExperiencesTable";
-import { BiPlusCircle, BiRefresh } from "react-icons/bi";
+import { BiAddToQueue, BiPlusCircle, BiRefresh } from "react-icons/bi";
 import { ExperiencesInformation } from "./views/ExperiencesInformation";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 import { ExperiencesInt } from "../../interfaces/ExperiencesInt";
-import { updateExperiences } from "../../shared/middlewares/experiences.middleware";
+import { addExperience, updateExperiences } from "../../shared/middlewares/experiences.middleware";
 import { toastNotify } from "../../shared/utils/toastNotify";
 import { StatusEnumTypes } from "../../shared/Types/StatusEnumTypes";
+import { NewExperience } from "./views/NewExperience";
 
 export const Experiences = () => {
     const location = useLocation();
     const toast = useToast();
     const navigate = useNavigate();
-    const { isOpen, onOpen, onClose } = useDisclosure();
     const [slug, setSlug] = useState<string>()
     const [currentValue, setCurrentValue] = useState<ExperiencesInt>()
-    
+    const [newValue, setNewValue] = useState<ExperiencesInt>()
+    const [isDisabled, setIsDisabled] = useState<boolean>(true)
+
+    useEffect(() => {
+        setIsDisabled(true)
+
+    }, [location.pathname])
 
     const updateData = () => {
-        if(slug && currentValue)
+        if (slug && currentValue)
             updateExperiences({
                 slug: slug,
-                data:  currentValue
+                data: currentValue
             })
-            .then(() => toastNotify(toast, StatusEnumTypes.SUCCESS, "Datos actualizados con exito"))
+            .then(() => {
+                setCurrentValue(undefined);
+                navigate(`/experiences`)
+                toastNotify(toast, StatusEnumTypes.SUCCESS, "Datos actualizados con exito");
+            })
             .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error al actualizar los datos"))
-            .finally(() => navigate(`/experiences/${currentValue?.slug}`))
+    }
+
+    const addData = () => {
+        if(newValue)
+            addExperience(newValue)
+            .then(() => {
+                setNewValue(undefined);
+                navigate(`/experiences`)
+                toastNotify(toast, StatusEnumTypes.SUCCESS, "Datos actualizados con exito");
+            })
+            .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error al crear la experience"))
     }
 
     return (
-        <Flex 
-            direction="column" 
+        <Flex
+            direction="column"
             w="100%"
         >
-            <Topbar 
-                title="Experiences" 
+            <Topbar
+                title="Experiences"
                 buttons={
-                location.pathname.startsWith("/experiences/") 
-                ? 
-                [
-                    {
-                        label: "Guardar cambios",
-                        onClick: () => updateData(),
-                        icon: BiRefresh
-                    }
-                ] 
-                :
-                [
-                    {
-                        label: "Nueva experience",
-                        onClick: () => onOpen(),
-                        icon: BiPlusCircle
-                    }
-                ]
-            }
+                    location.pathname.includes("/experiences/new")
+                        ?
+                        [
+                            {
+                                label: "Crear experience",
+                                onClick: () => addData(),
+                                icon: BiAddToQueue,
+                                isDisabled: isDisabled,
+                                requiredText: "Debe completar todos los datos"
+                            }
+                        ]
+                        : location.pathname.startsWith("/experiences/")
+                        ?   
+                        [
+                            {
+                                label: "Guardar cambios",
+                                onClick: () => updateData(),
+                                icon: BiRefresh,
+                                isDisabled: isDisabled,
+                                requiredText: "No se realizo ningun cambio"
+                            }
+                        ]
+                        :
+                        [
+                            {
+                                label: "Nueva experience",
+                                onClick: () => navigate("/experiences/new"),
+                                icon: BiPlusCircle
+                            }
+                        ]
+                }
             />
 
             <Flex
@@ -64,20 +97,28 @@ export const Experiences = () => {
             >
                 <Routes>
                     <Route index element={
-                            <ExperiencesTable 
-                                isOpen={isOpen}
-                                onClose={onClose}
-                            />
-                        } 
+                        <ExperiencesTable
+                        />
+                    }
                     />
 
                     <Route path=":slug" element={
-                            <ExperiencesInformation 
-                                setSlug={setSlug}
-                                currentValue={currentValue}
-                                setCurrentValue={setCurrentValue}
-                            />
-                        } 
+                        <ExperiencesInformation
+                            setSlug={setSlug}
+                            currentValue={currentValue}
+                            setCurrentValue={setCurrentValue}
+                            setIsDisabled={setIsDisabled}
+                        />
+                    }
+                    />
+
+                    <Route path="/new" element={
+                        <NewExperience 
+                            newValue={newValue}
+                            setNewValue={setNewValue}
+                            setIsDisabled={setIsDisabled}
+                        />
+                    }
                     />
                 </Routes>
             </Flex>

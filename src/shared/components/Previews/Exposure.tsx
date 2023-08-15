@@ -8,7 +8,7 @@ interface Props {
     title: string;
     width?: string;
 }
-export const Exporuse = ({ multimedia, title, width = "300px" }: Props) => {
+export const Exporuse = ({ multimedia, title = "img", width = "300px" }: Props) => {
     const gridOne = {
         gridColumn: "1 / 2",
         gridRow: "1 / 3"
@@ -33,7 +33,7 @@ export const Exporuse = ({ multimedia, title, width = "300px" }: Props) => {
         <Grid gridTemplateColumns="repeat(3, 1fr)" gap="3px" w={width}>
             {multimedia?.map((item: any, index: number) => (
                 <Box 
-                    h={ index === 0 ? "103px" : "50px" }
+                    h={ index === 0 ? "253px" : "125px" }
                     w={"100%"}
                     key={index}
                     gridColumn={

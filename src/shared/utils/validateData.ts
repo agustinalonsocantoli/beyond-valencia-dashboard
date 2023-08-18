@@ -1,4 +1,5 @@
-import { ExperiencesInt, MultimediaInt } from "../../interfaces/ExperiencesInt";
+import { ExperiencesInt } from "../../interfaces/ExperiencesInt";
+import { MultimediaInt } from "../../interfaces/MultimediaInt";
 
 export const validateNewExperience = (experience: ExperiencesInt): boolean => {
     if(

@@ -1,12 +1,8 @@
-enum TypeLanding {
-    HOME = "home",
-    EXPERIENCES = "experiences",
-    DAYTRIPS = "daytrips",
-    FOOD = "food"
-}
+import { LandingEnumTypes } from "../shared/Types/LadingEnumTypes";
 
 export interface ContentInt {
-    landing?: TypeLanding;
+    _id?: string;
+    landing?: LandingEnumTypes;
     link: string;
     img: string;
     imgW?: string;

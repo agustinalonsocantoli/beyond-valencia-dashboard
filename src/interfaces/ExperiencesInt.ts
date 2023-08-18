@@ -1,4 +1,4 @@
-export interface MultimediaInt {
+interface MultimediaTypes {
     src: string;
     type: string;
 }
@@ -25,7 +25,7 @@ export interface ExperiencesInt {
     headline: string;
     description: string;
     information: string;
-    multimedia: MultimediaInt[];
+    multimedia: MultimediaTypes[];
     highlights: string[];
     details: {
         age: string;

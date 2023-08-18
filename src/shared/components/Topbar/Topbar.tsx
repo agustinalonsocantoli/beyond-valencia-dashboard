@@ -51,27 +51,29 @@ export const Topbar = ({
             </Flex>
 
             {buttons &&
-                buttons.map(((item: any, index: number) => (
-                    <Flex direction="column" justifyContent="center" alignItems="center">
-                        <Button 
-                            onClick={item.onClick} 
-                            key={index} 
-                            gap="5px" 
-                            alignItems="center"
-                            bg={"rgba(50, 212, 164, .50)"}
-                            _hover={{ bg: "rgba(50, 212, 164, .25)"}}
-                            isDisabled={item?.isDisabled}
-                        >
-                            {item?.label}
-                            {item?.icon && <Icon as={item?.icon} boxSize="20px"/>}
-                        </Button>
-                        {(item?.requiredText && item?.isDisabled) &&
-                            <Text color="red" fontSize="13px">
-                                {item?.requiredText}
-                            </Text>
-                        }
-                    </Flex>
-                )))
+                <Flex gap="10px">
+                    {buttons.map(((item: any, index: number) => (
+                        <Flex direction="column" justifyContent="center" alignItems="center" key={index}>
+                            <Button 
+                                onClick={item.onClick} 
+                                key={index} 
+                                gap="5px" 
+                                alignItems="center"
+                                bg={"rgba(50, 212, 164, .50)"}
+                                _hover={{ bg: "rgba(50, 212, 164, .25)"}}
+                                isDisabled={item?.isDisabled}
+                            >
+                                {item?.label}
+                                {item?.icon && <Icon as={item?.icon} boxSize="20px"/>}
+                            </Button>
+                            {(item?.requiredText && item?.isDisabled) &&
+                                <Text color="red" fontSize="13px">
+                                    {item?.requiredText}
+                                </Text>
+                            }
+                        </Flex>
+                    )))}
+                </Flex>
             }
         </Flex>
     );

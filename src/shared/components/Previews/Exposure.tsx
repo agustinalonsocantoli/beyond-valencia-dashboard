@@ -1,14 +1,27 @@
-import { Box, Grid, Image } from "@chakra-ui/react";
+import { Box, Grid, Heading, Image, Text } from "@chakra-ui/react";
+import { MultimediaInt } from "../../../interfaces/MultimediaInt";
 
 interface Props {
-    multimedia: {
-        type: "image" | "video";
-        src: string;
-    }[];
+    multimedia: MultimediaInt[] | undefined;
     title: string;
     width?: string;
+    height?: {
+        single: string;
+        double: string;
+    };
+    isEdit?: boolean;
+    handleClick?: (item: MultimediaInt) => void;
 }
-export const Exporuse = ({ multimedia, title = "img", width = "300px" }: Props) => {
+
+export const Exporuse = ({
+    multimedia,
+    title = "img",
+    width = "300px",
+    height = { single: "253px", double: "125px" },
+    isEdit = false,
+    handleClick = () => { }
+}: Props) => {
+
     const gridOne = {
         gridColumn: "1 / 2",
         gridRow: "1 / 3"
@@ -32,31 +45,71 @@ export const Exporuse = ({ multimedia, title = "img", width = "300px" }: Props) 
     return (
         <Grid gridTemplateColumns="repeat(3, 1fr)" gap="3px" w={width}>
             {multimedia?.map((item: any, index: number) => (
-                <Box 
-                    h={ index === 0 ? "253px" : "125px" }
+                <Box
+                    position="relative"
+                    h={index === 0 ? height?.single : height?.double}
                     w={"100%"}
                     key={index}
                     gridColumn={
                         index === 0 ? gridOne.gridColumn
-                        : index === 1 ? gridTwo.gridColumn
-                        : index === 2 ? gridThree.gridColumn
-                        : gridFour.gridColumn
+                            : index === 1 ? gridTwo.gridColumn
+                                : index === 2 ? gridThree.gridColumn
+                                    : gridFour.gridColumn
                     }
                     gridRow={
                         index === 0 ? gridOne.gridRow
-                        : index === 1 ? gridTwo.gridRow
-                        : index === 2 ? gridThree.gridRow
-                        : gridFour.gridRow
+                            : index === 1 ? gridTwo.gridRow
+                                : index === 2 ? gridThree.gridRow
+                                    : gridFour.gridRow
                     }
+                    cursor={isEdit ? "pointer" : "default"}
+                    onClick={() => handleClick(item)}
                 >
                     {item?.type === "video" &&
-                        <video autoPlay muted loop>
+                        <video
+                            autoPlay
+                            muted
+                            loop
+                            style={{
+                                objectFit: "cover",
+                                height: "100%",
+                                width: "100%",
+                                borderRadius: isEdit ? "20px" : "0"
+                            }}
+                        >
                             <source src={item?.src} />
                         </video>
                     }
 
                     {item?.type === "image" &&
-                        <Image src={item?.src} alt={title + index} objectFit="cover" h="100%" w="100%"/>
+                        <Image
+                            src={item?.src} alt={title + index}
+                            objectFit="cover"
+                            h="100%"
+                            w="100%"
+                            borderRadius={isEdit ? "20px" : "0"}
+                        />
+                    }
+
+                    {isEdit &&
+                        <Box
+                            className={`content-${index + 1}`}
+                            p={item?.h3 || item?.p ? "5px 0 5px 20px" : "0"}
+                            position="absolute"
+                            color="#FFF"
+                            bottom="0"
+                            left="0"
+                            borderRadius="0 0 20px 20px"
+                            textAlign="left"
+                            width="100%"
+                            background="rgba(0, 0, 0, .7)"
+                        >
+                            <Heading>{item?.h3}</Heading>
+                            <Text>
+                                <Text as="strong" mr="5px">{item?.span}:</Text>
+                                {item?.p}
+                            </Text>
+                        </Box>
                     }
                 </Box>
             ))}

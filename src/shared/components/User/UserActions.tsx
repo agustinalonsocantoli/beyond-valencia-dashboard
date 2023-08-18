@@ -61,10 +61,9 @@ export const UserActions = () => {
                     bg={"#FFFFFF"}
                     border={"1px solid #f0f0f3"}
                     bottom="35px"
-                    right="-120px"
+                    right="0"
                     borderRadius="14px"
                     boxShadow="rgba(0, 0, 0, 0.25) 0px 4px 29px 0px"
-                    zIndex="dropdown"
                     opacity={modal.open ? "1" : "0"}
                     visibility={modal.open ? "visible" : "hidden"}
                     transform={modal.open ? "none" : "scale(0.8) translateZ(0px)"}

@@ -6,6 +6,8 @@ import { Heading } from "@chakra-ui/react";
 import { Experiences } from "../../../pages/Experiences/Experiences";
 import { Codes } from "../../../pages/Codes/Codes";
 import { Partners } from "../../../pages/Partners/Partners";
+import { Content } from "../../../pages/Content/Content";
+import { Multimedia } from "../../../pages/Multimedia/Multimedia";
 
 export const RouterController = () => {
     const { user } = useAuthContex();
@@ -43,11 +45,11 @@ export const RouterController = () => {
             </Route>
 
             <Route element={<RequireAuth />}>
-                <Route path='content/*' element={<Heading>Content</Heading>} />
+                <Route path='content/*' element={<Content />} />
             </Route>
 
             <Route element={<RequireAuth />}>
-                <Route path='multimedia/*' element={<Heading>Multimedia</Heading>} />
+                <Route path='multimedia/*' element={<Multimedia />} />
             </Route>
 
 

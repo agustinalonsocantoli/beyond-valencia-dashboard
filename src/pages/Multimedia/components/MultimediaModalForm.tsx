@@ -37,7 +37,6 @@ export const MultimediaModalForm = ({ isOpen, onClose, multimedia, setMultimedia
     const [currentValue, setCurrentValue] = useState<MultimediaInt>();
     const [options, setOptions] = useState<{value: string, label: string}[]>([]);
 
-    useEffect(() => { console.log(currentValue) }, [currentValue]) 
     useEffect(() => {
         setCurrentValue(multimedia)
 

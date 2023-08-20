@@ -1,5 +1,6 @@
 import { ExperiencesInt } from "../../interfaces/ExperiencesInt";
 import { MultimediaInt } from "../../interfaces/MultimediaInt";
+import { ProductInt } from "../../interfaces/ProductInt";
 
 export const validateNewExperience = (experience: ExperiencesInt): boolean => {
     if(
@@ -22,6 +23,20 @@ export const validateNewExperience = (experience: ExperiencesInt): boolean => {
         (experience?.groups?.length > 0) &&
         experience?.description &&
         experience?.conditions
+    ) {
+        return true
+    } else {
+        return false
+    }
+}
+
+export const validateNewProducts = (product: ProductInt): boolean => {
+    if(
+        product?.title &&
+        product?.description &&
+        product?.type &&
+        product?.price?.small &&
+        product?.price?.medium
     ) {
         return true
     } else {

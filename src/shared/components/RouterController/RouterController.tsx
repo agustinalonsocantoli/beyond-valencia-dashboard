@@ -8,6 +8,8 @@ import { Codes } from "../../../pages/Codes/Codes";
 import { Partners } from "../../../pages/Partners/Partners";
 import { Content } from "../../../pages/Content/Content";
 import { Multimedia } from "../../../pages/Multimedia/Multimedia";
+import { Bikes } from "../../../pages/Bikes/Bikes";
+import { Lockers } from "../../../pages/Lockers/Lockers";
 
 export const RouterController = () => {
     const { user } = useAuthContex();
@@ -37,11 +39,11 @@ export const RouterController = () => {
             </Route>
 
             <Route element={<RequireAuth />}>
-                <Route path='lockers/*' element={<Heading>Lockers</Heading>} />
+                <Route path='lockers/*' element={<Lockers />} />
             </Route>
 
             <Route element={<RequireAuth />}>
-                <Route path='bikes/*' element={<Heading>Bikes</Heading>} />
+                <Route path='bikes/*' element={<Bikes />} />
             </Route>
 
             <Route element={<RequireAuth />}>

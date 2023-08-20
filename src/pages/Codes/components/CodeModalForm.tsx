@@ -184,7 +184,7 @@ export const CodeModalForm = ({ isOpen, onClose, editForm, setEditForm, setRefre
 
 
                             <Box>
-                                <FormLabel>Codigo</FormLabel>
+                                <FormLabel>Email</FormLabel>
                                 <Input
                                     type="email"
                                     id="email"

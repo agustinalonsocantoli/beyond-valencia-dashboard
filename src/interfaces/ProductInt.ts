@@ -1,15 +1,11 @@
-enum TypeProductEnum {
-    "hours",
-    "allday",
-    "days",
-    "longer"
-}
+import { string } from "yup";
+import { ProductsEnumTypes } from "../shared/Types/ProductsEnumTypes";
 
 export interface ProductInt {
     title: string;
-    type: TypeProductEnum;
+    type: ProductsEnumTypes;
     description: string;
-    select: any;
+    select: string | string[];
     price: {
         small: number;
         medium: number;

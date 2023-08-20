@@ -6,6 +6,7 @@ import { InformationSelect } from "../../../shared/components/Elements/Informati
 import { ProductsEnumTypes } from "../../../shared/Types/ProductsEnumTypes";
 import { ProductInt } from "../../../interfaces/ProductInt";
 import { validateNewProducts } from "../../../shared/utils/validateData";
+import { addBike } from "../../../shared/middlewares/bikes.middleware";
 
 interface Props {
     isOpen: boolean;
@@ -71,20 +72,19 @@ export const NewBikesModalForm = ({ isOpen, onClose, setRefresh }: Props) => {
         }));
     }
 
-    const onSubmit = (values: any) => {
-        // const newCode = {
-        //     code: values.code,
-        //     discount: values.discount,
-        // }
+    const onSubmit = () => {
+        if(!currentValue) return;
 
-        //     .then(() => {
-        //         setRefresh(true);
-        //         toastNotify(toast, StatusEnumTypes.SUCCESS, "Su codigo fue creado")
+        addBike(currentValue)
+        .then(() => {
+            setRefresh(true);
+            toastNotify(toast, StatusEnumTypes.SUCCESS, "Su producto fue creado")
 
-        //     })
-        //     .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte"))
+        })
+        .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte"))
 
         setCurrentValue(undefined);
+        onClose();
     };
 
     return (
@@ -172,7 +172,7 @@ export const NewBikesModalForm = ({ isOpen, onClose, setRefresh }: Props) => {
                             color="#FFFFFF"
                             _hover={{ bg: "rgba(50, 212, 164, .7)" }}
                             type="submit"
-                            onClick={onClose}
+                            onClick={onSubmit}
                             w="25%"
                             isDisabled={isDisabled}
                         >

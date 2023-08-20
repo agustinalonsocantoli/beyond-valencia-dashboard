@@ -2,9 +2,8 @@ import { Box, Button, FormLabel, Input, Modal, ModalBody, ModalContent, ModalFoo
 import { toastNotify } from "../../../shared/utils/toastNotify";
 import { StatusEnumTypes } from "../../../shared/Types/StatusEnumTypes";
 import { useEffect, useState } from "react";
-import { InformationSelect } from "../../../shared/components/Elements/InformationSelect";
-import { ProductsEnumTypes } from "../../../shared/Types/ProductsEnumTypes";
 import { ProductInt } from "../../../interfaces/ProductInt";
+import { updateBike } from "../../../shared/middlewares/bikes.middleware";
 
 interface Props {
     isOpen: boolean;
@@ -46,20 +45,22 @@ export const EditBikesModalForm = ({ isOpen, onClose, setRefresh, bikeEdit, setB
 
     }
 
-    const onSubmit = (values: any) => {
-        // const newCode = {
-        //     code: values.code,
-        //     discount: values.discount,
-        // }
+    const onSubmit = () => {
+        if(!currentValue) return;
 
-        //     .then(() => {
-        //         setRefresh(true);
-        //         toastNotify(toast, StatusEnumTypes.SUCCESS, "Su codigo fue creado")
+        updateBike({
+            id: bikeEdit?._id,
+            editBike: currentValue
+        })
+        .then(() => {
+            setRefresh(true);
+            toastNotify(toast, StatusEnumTypes.SUCCESS, "Su codigo fue creado")
 
-        //     })
-        //     .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte"))
+        })
+        .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte"))
 
         setCurrentValue(undefined);
+        onClose();
     };
 
     return (
@@ -135,11 +136,11 @@ export const EditBikesModalForm = ({ isOpen, onClose, setRefresh, bikeEdit, setB
                             color="#FFFFFF"
                             _hover={{ bg: "rgba(50, 212, 164, .7)" }}
                             type="submit"
-                            onClick={onClose}
+                            onClick={onSubmit}
                             w="25%"
                             isDisabled={bikeEdit === currentValue}
                         >
-                            Crear
+                            Actualizar
                         </Button>
 
                         <Button

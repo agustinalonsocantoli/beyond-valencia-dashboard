@@ -5,30 +5,32 @@ import { useEffect, useState } from "react";
 import { InformationSelect } from "../../../shared/components/Elements/InformationSelect";
 import { ProductsEnumTypes } from "../../../shared/Types/ProductsEnumTypes";
 import { ProductInt } from "../../../interfaces/ProductInt";
+import { updateLockers } from "../../../shared/middlewares/lockers.middleware";
 
 interface Props {
     isOpen: boolean;
     onClose: () => void;
     setRefresh: (action: boolean) => void;
-    bikeEdit: any
-    setBikeEdit: (action: any) => void;
+    lockersEdit: any
+    setLockersEdit: (action: any) => void;
 }
 
-export const EditBikesModalForm = ({ isOpen, onClose, setRefresh, bikeEdit, setBikeEdit }: Props) => {
+export const EditLockersModalForm = ({ isOpen, onClose, setRefresh, lockersEdit, setLockersEdit }: Props) => {
     const toast = useToast();
     const [currentValue, setCurrentValue] = useState<ProductInt>();
 
     useEffect(() => {
-        setCurrentValue(bikeEdit)
+        setCurrentValue(lockersEdit)
 
-    }, [bikeEdit])
+    }, [lockersEdit])
 
     const inputChange = (e: any) => {
         const { name, value } = e.target;
 
         if(
             name === "small" ||
-            name === "medium"
+            name === "medium" ||
+            name === "normal" 
         ) {
             setCurrentValue((prev: any) => ({
                 ...prev,
@@ -46,20 +48,22 @@ export const EditBikesModalForm = ({ isOpen, onClose, setRefresh, bikeEdit, setB
 
     }
 
-    const onSubmit = (values: any) => {
-        // const newCode = {
-        //     code: values.code,
-        //     discount: values.discount,
-        // }
+    const onSubmit = () => {
+        if(!currentValue) return;
 
-        //     .then(() => {
-        //         setRefresh(true);
-        //         toastNotify(toast, StatusEnumTypes.SUCCESS, "Su codigo fue creado")
+        updateLockers({
+            id: lockersEdit?._id,
+            editLocker: currentValue
+        })
+        .then(() => {
+            setRefresh(true);
+            toastNotify(toast, StatusEnumTypes.SUCCESS, "Su codigo fue creado")
 
-        //     })
-        //     .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte"))
+        })
+        .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte"))
 
         setCurrentValue(undefined);
+        onClose();
     };
 
     return (
@@ -125,6 +129,16 @@ export const EditBikesModalForm = ({ isOpen, onClose, setRefresh, bikeEdit, setB
                                 onChange={inputChange}
                             />
                         </Box>
+                        <Box>
+                            <FormLabel>Precio Normal</FormLabel>
+                            <Input
+                                type="number"
+                                id="normal"
+                                name="normal"
+                                defaultValue={currentValue?.price?.normal}
+                                onChange={inputChange}
+                            />
+                        </Box>
                     </ModalBody>
 
                     <ModalFooter
@@ -135,11 +149,11 @@ export const EditBikesModalForm = ({ isOpen, onClose, setRefresh, bikeEdit, setB
                             color="#FFFFFF"
                             _hover={{ bg: "rgba(50, 212, 164, .7)" }}
                             type="submit"
-                            onClick={onClose}
+                            onClick={onSubmit}
                             w="25%"
-                            isDisabled={bikeEdit === currentValue}
+                            isDisabled={lockersEdit === currentValue}
                         >
-                            Crear
+                            Actualizar
                         </Button>
 
                         <Button

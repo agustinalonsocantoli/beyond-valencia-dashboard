@@ -1,11 +1,11 @@
 import axios from "axios";
 import { ProductInt } from "../../interfaces/ProductInt";
 
-export const getBikes = async () => {
+export const getLockers = async () => {
     const token = localStorage.getItem('token') ? localStorage.getItem('token') : '';
 
     return await axios.get(
-        `${import.meta.env.VITE_URL_API}bikes`,
+        `${import.meta.env.VITE_URL_API}lockers`,
         {
             headers: {
                 "x-access-token": `${token}`
@@ -14,11 +14,11 @@ export const getBikes = async () => {
     );
 };
 
-export const getBikeById = async (id: string) => {
+export const getLockerById = async (id: string) => {
     const token = localStorage.getItem('token') ? localStorage.getItem('token') : '';
 
     return await axios.get(
-        `${import.meta.env.VITE_URL_API}bikes/${id}`,
+        `${import.meta.env.VITE_URL_API}lockers/${id}`,
         {
             headers: {
                 "x-access-token": `${token}`
@@ -27,12 +27,12 @@ export const getBikeById = async (id: string) => {
     );
 };
 
-export const addBike = async (newBike: ProductInt) => {
+export const addLocker = async (editLockers: ProductInt) => {
     const token = localStorage.getItem('token') ? localStorage.getItem('token') : '';
 
     return await axios.post(
-        `${import.meta.env.VITE_URL_API}bikes`,
-        newBike,
+        `${import.meta.env.VITE_URL_API}lockers`,
+        editLockers,
         {   
             headers: {
                 "x-access-token": `${token}`
@@ -41,18 +41,18 @@ export const addBike = async (newBike: ProductInt) => {
     );
 };
 
-export const updateBike = async ({
+export const updateLockers = async ({
     id, 
-    editBike
-}: { 
+    editLocker
+}: {
     id: string, 
-    editBike: ProductInt 
+    editLocker: ProductInt
 }) => {
     const token = localStorage.getItem('token') ? localStorage.getItem('token') : '';
 
     return await axios.put(
-        `${import.meta.env.VITE_URL_API}bikes/${id}`,
-        editBike,
+        `${import.meta.env.VITE_URL_API}lockers/${id}`,
+        editLocker,
         {   
             headers: {
                 "x-access-token": `${token}`
@@ -61,11 +61,11 @@ export const updateBike = async ({
     );
 };
 
-export const deleteBike = async (id: string) => {
+export const deleteLocker = async (id: string) => {
     const token = localStorage.getItem('token') ? localStorage.getItem('token') : '';
 
     return await axios.delete(
-        `${import.meta.env.VITE_URL_API}bikes/${id}`,
+        `${import.meta.env.VITE_URL_API}lockers/${id}`,
         {
             headers: {
                 "x-access-token": `${token}`

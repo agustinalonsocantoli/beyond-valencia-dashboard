@@ -6,6 +6,7 @@ import { InformationSelect } from "../../../shared/components/Elements/Informati
 import { ProductsEnumTypes } from "../../../shared/Types/ProductsEnumTypes";
 import { ProductInt } from "../../../interfaces/ProductInt";
 import { validateNewProducts } from "../../../shared/utils/validateData";
+import { addLocker } from "../../../shared/middlewares/lockers.middleware";
 
 interface Props {
     isOpen: boolean;
@@ -13,7 +14,7 @@ interface Props {
     setRefresh: (action: boolean) => void;
 }
 
-export const NewBikesModalForm = ({ isOpen, onClose, setRefresh }: Props) => {
+export const NewLockersModalForm = ({ isOpen, onClose, setRefresh }: Props) => {
     const toast = useToast();
     const [currentValue, setCurrentValue] = useState<ProductInt>();
     const [isDisabled, setIsDisabled] = useState<boolean>(true);
@@ -71,20 +72,19 @@ export const NewBikesModalForm = ({ isOpen, onClose, setRefresh }: Props) => {
         }));
     }
 
-    const onSubmit = (values: any) => {
-        // const newCode = {
-        //     code: values.code,
-        //     discount: values.discount,
-        // }
+    const onSubmit = () => {
+        if(!currentValue) return;
 
-        //     .then(() => {
-        //         setRefresh(true);
-        //         toastNotify(toast, StatusEnumTypes.SUCCESS, "Su codigo fue creado")
+        addLocker(currentValue)
+        .then(() => {
+            setRefresh(true);
+            toastNotify(toast, StatusEnumTypes.SUCCESS, "Su codigo fue creado")
 
-        //     })
-        //     .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte"))
+        })
+        .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte"))
 
         setCurrentValue(undefined);
+        onClose();
     };
 
     return (
@@ -162,6 +162,16 @@ export const NewBikesModalForm = ({ isOpen, onClose, setRefresh }: Props) => {
                                 onChange={inputChange}
                             />
                         </Box>
+
+                        <Box>
+                            <FormLabel>Precio Normal</FormLabel>
+                            <Input
+                                type="number"
+                                id="normal"
+                                name="normal"
+                                onChange={inputChange}
+                            />
+                        </Box>
                     </ModalBody>
 
                     <ModalFooter
@@ -172,7 +182,7 @@ export const NewBikesModalForm = ({ isOpen, onClose, setRefresh }: Props) => {
                             color="#FFFFFF"
                             _hover={{ bg: "rgba(50, 212, 164, .7)" }}
                             type="submit"
-                            onClick={onClose}
+                            onClick={onSubmit}
                             w="25%"
                             isDisabled={isDisabled}
                         >

@@ -7,26 +7,27 @@ import { ProductInt } from "../../interfaces/ProductInt";
 import { AxiosResponse } from "axios";
 import { toastNotify } from "../../shared/utils/toastNotify";
 import { StatusEnumTypes } from "../../shared/Types/StatusEnumTypes";
-import { getBikes } from "../../shared/middlewares/bikes.middleware";
 import { ActionsElements } from "../../shared/components/ColumnElements/ActionsElements";
 import { TextElement } from "../../shared/components/ColumnElements/TextElement";
 import { BiPlusCircle } from "react-icons/bi";
-import { NewBikesModalForm } from "./Components/NewLockersModalForm";
-import { EditBikesModalForm } from "./Components/EditLockersModalForm";
+import { NewLockersModalForm } from "./Components/NewLockersModalForm";
+import { EditLockersModalForm } from "./Components/EditLockersModalForm";
+import { deleteLocker, getLockers } from "../../shared/middlewares/lockers.middleware";
 
 export const Lockers = () => {
     const toast = useToast();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isOpen: isOpenEdit, onOpen: onOpenEdit, onClose: onCloseEdit } = useDisclosure();
-    const [bikes, setBikes] = useState<ProductInt>();
+    const [lockers, setLockers] = useState<ProductInt>();
     const [refreshTable, setRefreshTable] = useState<boolean>(true);
-    const [bikeEdit, setBikeEdit] = useState<any>();
+    const [lockersEdit, setLockersEdit] = useState<any>();
 
     useEffect(() => {
         refreshTable &&
-            getBikes()
+            getLockers()
                 .then((response: AxiosResponse) => {
-                    setBikes(response?.data?.data);
+                    setLockers(response?.data?.data);
+                    console.log(response?.data?.data);
                     setRefreshTable(false)
                 })
                 .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte"))
@@ -70,7 +71,17 @@ export const Lockers = () => {
             header="Medium Price"
             body={(rowData: any) => TextElement(
                 {
-                    title: { text: `${rowData?.price?.medium}€`}
+                    title: { text: `${rowData?.price?.medium}€` }
+                }
+            )}
+        />,
+        <Column
+            key="price.normal"
+            field="price.normal"
+            header="Normal Price"
+            body={(rowData: any) => TextElement(
+                {
+                    title: { text: `${rowData?.price?.medium}€` }
                 }
             )}
         />,
@@ -81,14 +92,14 @@ export const Lockers = () => {
             body={(rowData) => ActionsElements({
                 edit: {
                     onClick: () => {
-                        setBikeEdit(rowData);
+                        setLockersEdit(rowData);
                         onOpenEdit();
                     },
                 },
                 remove: {
                     onClick: () => {
-                        // deleteCode(rowData?._id)
-                        // .then(() => setRefreshTable(true))
+                        deleteLocker(rowData?._id)
+                        .then(() => setRefreshTable(true))
                     },
                 }
             })}
@@ -112,22 +123,22 @@ export const Lockers = () => {
             />
 
             <CustomTable
-                data={bikes}
+                data={lockers}
                 columns={columns}
             />
 
-            <NewBikesModalForm
+            <NewLockersModalForm
                 isOpen={isOpen}
                 onClose={onClose}
                 setRefresh={setRefreshTable}
             />
 
-            <EditBikesModalForm 
+            <EditLockersModalForm
                 isOpen={isOpenEdit}
                 onClose={onCloseEdit}
                 setRefresh={setRefreshTable}
-                bikeEdit={bikeEdit}
-                setBikeEdit={setBikeEdit}
+                lockersEdit={lockersEdit}
+                setLockersEdit={setLockersEdit}
             />
         </Flex>
     );

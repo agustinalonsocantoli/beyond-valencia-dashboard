@@ -7,7 +7,7 @@ import { ProductInt } from "../../interfaces/ProductInt";
 import { AxiosResponse } from "axios";
 import { toastNotify } from "../../shared/utils/toastNotify";
 import { StatusEnumTypes } from "../../shared/Types/StatusEnumTypes";
-import { getBikes } from "../../shared/middlewares/bikes.middleware";
+import { deleteBike, getBikes } from "../../shared/middlewares/bikes.middleware";
 import { ActionsElements } from "../../shared/components/ColumnElements/ActionsElements";
 import { TextElement } from "../../shared/components/ColumnElements/TextElement";
 import { BiPlusCircle } from "react-icons/bi";
@@ -87,8 +87,8 @@ export const Bikes = () => {
                 },
                 remove: {
                     onClick: () => {
-                        // deleteCode(rowData?._id)
-                        // .then(() => setRefreshTable(true))
+                        deleteBike(rowData?._id)
+                        .then(() => setRefreshTable(true))
                     },
                 }
             })}

@@ -55,6 +55,7 @@ export const ExperiencesInformation = ({ currentValue, setCurrentValue, setId, s
                     currentValue={currentValue}
                     setCurrentValue={setCurrentValue}
                     setIsDisabled={setIsDisabled}
+                    fromCalled="experiences"
                 />
             </Flex>
 

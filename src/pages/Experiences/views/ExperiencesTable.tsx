@@ -13,11 +13,12 @@ import { DateElement } from '../../../shared/components/ColumnElements/DateEleme
 import { PricesElements } from '../../../shared/components/ColumnElements/PricesElements';
 import { ActionsElements } from '../../../shared/components/ColumnElements/ActionsElements';
 import { useNavigate } from 'react-router-dom';
+import { ExperiencesInt } from '../../../interfaces/ExperiencesInt';
 
 export const ExperiencesTable = () => {
     const toast = useToast();
     const navigate = useNavigate();
-    const [experiences, setExperiences] = useState<any>();
+    const [experiences, setExperiences] = useState<ExperiencesInt>();
     const [refreshTable, setRefreshTable] = useState<boolean>(true);
 
     useEffect(() => {

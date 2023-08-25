@@ -1,7 +1,6 @@
 import { Flex, useToast } from '@chakra-ui/react';
 import { Column } from 'primereact/column';
 import { useEffect, useState } from 'react';
-import { deleteExperiences, getExperiences } from '../../../shared/middlewares/experiences.middleware';
 import { AxiosResponse } from 'axios';
 import { toastNotify } from '../../../shared/utils/toastNotify';
 import { StatusEnumTypes } from '../../../shared/Types/StatusEnumTypes';
@@ -13,18 +12,20 @@ import { DateElement } from '../../../shared/components/ColumnElements/DateEleme
 import { PricesElements } from '../../../shared/components/ColumnElements/PricesElements';
 import { ActionsElements } from '../../../shared/components/ColumnElements/ActionsElements';
 import { useNavigate } from 'react-router-dom';
+import { deleteDaytrip, getDaytrips } from '../../../shared/middlewares/daytrips.middleware';
+import { DaystripsInt } from '../../../interfaces/DaytripsInt';
 
 export const DaytripsTable = () => {
     const toast = useToast();
     const navigate = useNavigate();
-    const [experiences, setExperiences] = useState<any>();
+    const [daytrips, setDaytrips] = useState<DaystripsInt>();
     const [refreshTable, setRefreshTable] = useState<boolean>(true);
 
     useEffect(() => {
         refreshTable &&
-            getExperiences()
+            getDaytrips()
                 .then((response: AxiosResponse) => {
-                    setExperiences(response?.data?.data);
+                    setDaytrips(response?.data?.data);
                     setRefreshTable(false)
                 })
                 .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte."))
@@ -32,13 +33,13 @@ export const DaytripsTable = () => {
     }, [refreshTable])
 
     const onRowClick = async (e: any) =>
-        navigate("/experiences/" + e.data?._id);
+        navigate("/daytrips/" + e.data?._id);
 
-    const deleteExperience = (id: string) => {
+    const deleteDaytrips = (id: string) => {
         id &&
-            deleteExperiences(id)
-                .then(() => toastNotify(toast, StatusEnumTypes.SUCCESS, "Experience borrada con exito"))
-                .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error al borrar Experience"))
+            deleteDaytrip(id)
+            .then(() => toastNotify(toast, StatusEnumTypes.SUCCESS, "Daytrip borrada con exito"))
+            .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error al borrar Daytrip"))
     }
 
     const columns = [
@@ -112,7 +113,7 @@ export const DaytripsTable = () => {
             body={(rowData) => ActionsElements({
                 remove: {
                     onClick: () => {
-                        deleteExperience(rowData?._id);
+                        deleteDaytrips(rowData?._id);
                         setRefreshTable(true);
                     },
                 }
@@ -126,7 +127,7 @@ export const DaytripsTable = () => {
             p="20px"
         >
             <CustomTable
-                data={experiences}
+                data={daytrips}
                 columns={columns}
                 onRowClick={onRowClick}
             />

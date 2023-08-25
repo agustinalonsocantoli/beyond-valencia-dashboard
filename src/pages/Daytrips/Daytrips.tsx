@@ -3,19 +3,21 @@ import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { Topbar } from "../../shared/components/Topbar/Topbar";
 import { BiAddToQueue, BiPlusCircle, BiRefresh } from "react-icons/bi";
 import { useEffect, useState } from "react";
-import { ExperiencesInt } from "../../interfaces/ExperiencesInt";
-import { addExperience, updateExperiences } from "../../shared/middlewares/experiences.middleware";
 import { toastNotify } from "../../shared/utils/toastNotify";
 import { StatusEnumTypes } from "../../shared/Types/StatusEnumTypes";
 import { DaytripsTable } from "./views/DaytripsTable";
+import { DaytripsInformation } from "./views/DaytripsInformation";
+import { NewDaytrip } from "./views/NewDaytrips";
+import { addDaytrip, updateDaytrip } from "../../shared/middlewares/daytrips.middleware";
+import { DaystripsInt } from "../../interfaces/DaytripsInt";
 
 export const Daytrips = () => {
     const location = useLocation();
     const toast = useToast();
     const navigate = useNavigate();
     const [id, setId] = useState<string>()
-    const [currentValue, setCurrentValue] = useState<ExperiencesInt>()
-    const [newValue, setNewValue] = useState<ExperiencesInt>()
+    const [currentValue, setCurrentValue] = useState<DaystripsInt>()
+    const [newValue, setNewValue] = useState<DaystripsInt>()
     const [isDisabled, setIsDisabled] = useState<boolean>(true)
 
     useEffect(() => {
@@ -25,7 +27,7 @@ export const Daytrips = () => {
 
     const updateData = () => {
         if (id && currentValue)
-            updateExperiences({
+            updateDaytrip({
                 id: id,
                 data: currentValue
             })
@@ -39,7 +41,7 @@ export const Daytrips = () => {
 
     const addData = () => {
         if(newValue)
-            addExperience(newValue)
+            addDaytrip(newValue)
             .then(() => {
                 setNewValue(undefined);
                 navigate(`/daytrips`)
@@ -56,7 +58,7 @@ export const Daytrips = () => {
             <Topbar
                 title="Daytrips"
                 buttons={
-                    location.pathname.includes("/daytrip/new")
+                    location.pathname.includes("/daytrips/new")
                         ?
                         [
                             {
@@ -67,7 +69,7 @@ export const Daytrips = () => {
                                 requiredText: "Debe completar todos los datos"
                             }
                         ]
-                        : location.pathname.startsWith("/daytrip/")
+                        : location.pathname.startsWith("/daytrips/")
                         ?   
                         [
                             {
@@ -82,7 +84,7 @@ export const Daytrips = () => {
                         [
                             {
                                 label: "Nuevo daytrip",
-                                onClick: () => navigate("/daytrip/new"),
+                                onClick: () => navigate("/daytrips/new"),
                                 icon: BiPlusCircle
                             }
                         ]
@@ -98,9 +100,9 @@ export const Daytrips = () => {
                         <DaytripsTable />
                     }
                     />
-{/* 
+
                     <Route path=":id" element={
-                        <ExperiencesInformation
+                        <DaytripsInformation
                             setId={setId}
                             currentValue={currentValue}
                             setCurrentValue={setCurrentValue}
@@ -110,13 +112,13 @@ export const Daytrips = () => {
                     />
 
                     <Route path="/new" element={
-                        <NewExperience 
+                        <NewDaytrip 
                             newValue={newValue}
                             setNewValue={setNewValue}
                             setIsDisabled={setIsDisabled}
                         />
                     }
-                    /> */}
+                    />
                 </Routes>
             </Flex>
         </Flex>

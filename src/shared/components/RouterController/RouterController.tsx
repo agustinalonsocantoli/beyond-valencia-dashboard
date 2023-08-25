@@ -11,6 +11,7 @@ import { Multimedia } from "../../../pages/Multimedia/Multimedia";
 import { Bikes } from "../../../pages/Bikes/Bikes";
 import { Lockers } from "../../../pages/Lockers/Lockers";
 import { Daytrips } from "../../../pages/Daytrips/Daytrips";
+import { Events } from "../../../pages/Events/Events";
 
 export const RouterController = () => {
     const { user } = useAuthContex();
@@ -20,7 +21,7 @@ export const RouterController = () => {
             <Route path='/login' element={!user.auth ? <Login /> : <Navigate to={"/experiences"} />} />
 
             <Route element={<RequireAuth />}>
-                <Route path='/' element={<Navigate to={"/experiences"} />} />
+                <Route path='/*' element={<Navigate to={"/experiences"} />} />
             </Route>
 
             <Route element={<RequireAuth />}>
@@ -31,12 +32,12 @@ export const RouterController = () => {
                 <Route path='daytrips/*' element={<Daytrips />} />
             </Route>
 
-            <Route element={<RequireAuth />}>
+            {/* <Route element={<RequireAuth />}>
                 <Route path='food/*' element={<Heading>Food</Heading>} />
-            </Route>
+            </Route> */}
 
             <Route element={<RequireAuth />}>
-                <Route path='events/*' element={<Heading>Events</Heading>} />
+                <Route path='events/*' element={<Events />} />
             </Route>
 
             <Route element={<RequireAuth />}>

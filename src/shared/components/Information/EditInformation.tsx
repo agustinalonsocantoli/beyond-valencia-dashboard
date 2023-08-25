@@ -6,14 +6,16 @@ import { StatusEnumTypes } from "../../Types/StatusEnumTypes";
 import { useEffect, useState } from "react";
 import { OrdersGroupsInt } from "../../../interfaces/ExperiencesInt";
 import { EditGroupModal } from "../Modals/EditGroupModal";
+import { format } from "date-fns";
 
 interface Props {
     currentValue: any,
     setCurrentValue: (action: any) => void;
     setIsDisabled: (action: boolean) => void;
+    fromCalled: "experiences" | "daytrips" | "events"
 }
 
-export const EditInformation = ({ currentValue, setCurrentValue, setIsDisabled }: Props) => {
+export const EditInformation = ({ currentValue, setCurrentValue, setIsDisabled, fromCalled }: Props) => {
     const toast = useToast();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [groupEdit, setGroupsEdit] = useState<{
@@ -308,6 +310,18 @@ export const EditInformation = ({ currentValue, setCurrentValue, setIsDisabled }
                     onChange={selectedPublished}
                 />
             </Box>
+            
+            {fromCalled === "events" &&
+                <Box>
+                        <FormLabel>Events Date</FormLabel>
+                        <Input
+                            name="eventDate"
+                            type="date"
+                            onChange={handleChange}
+                            defaultValue={format(new Date(currentValue?.eventDate), "yyyy-LL-dd")}
+                        />
+                </Box>
+            }
 
             <Box>
                 <FormLabel>Multimedia</FormLabel>

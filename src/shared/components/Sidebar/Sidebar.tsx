@@ -51,12 +51,12 @@ export const Sidebar = () => {
             label: "Daytrips",
             active: activePath("/daytrips")
         },
-        {
-            path: "/food",
-            icon: IoFastFoodOutline,
-            label: "Food & Daining",
-            active: activePath("/food")
-        },
+        // {
+        //     path: "/food",
+        //     icon: IoFastFoodOutline,
+        //     label: "Food & Daining",
+        //     active: activePath("/food")
+        // },
         {
             path: "/events",
             icon: BiSlideshow,

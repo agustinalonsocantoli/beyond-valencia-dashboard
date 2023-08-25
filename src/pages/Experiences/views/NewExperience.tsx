@@ -1,5 +1,4 @@
 import { Flex } from "@chakra-ui/react";
-import { useEffect } from "react";
 import { NewInformation } from "../../../shared/components/Information/NewInformation";
 import { PreviewDetails } from "../../../shared/components/Previews/PreviewDetails";
 
@@ -20,6 +19,7 @@ export const NewExperience = ({ newValue, setNewValue, setIsDisabled }: Props) =
                     newValue={newValue}
                     setNewValue={setNewValue}
                     setIsDisabled={setIsDisabled}
+                    fromCalled="experiences"
                 />
             </Flex>
 

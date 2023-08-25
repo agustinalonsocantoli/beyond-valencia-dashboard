@@ -12,9 +12,10 @@ interface Props {
     newValue: any;
     setNewValue: (action: any) => void;
     setIsDisabled: (action: boolean) => void;
+    fromCalled: "experiences" | "daytrips" | "events"
 }
 
-export const NewInformation = ({ newValue, setNewValue, setIsDisabled }: Props) => {
+export const NewInformation = ({ newValue, setNewValue, setIsDisabled, fromCalled }: Props) => {
     const toast = useToast();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [groupEdit, setGroupsEdit] = useState<{
@@ -27,18 +28,18 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled }: Props) 
             ...prev,
             highlights: [],
             included: [],
-            groups:[],
+            groups: [],
             multimedia: [
-                { src: '', type: 'image'},
-                { src: '', type: 'image'},
-                { src: '', type: 'image'},
-                { src: '', type: 'image'},
+                { src: '', type: 'image' },
+                { src: '', type: 'image' },
+                { src: '', type: 'image' },
+                { src: '', type: 'image' },
             ]
         }));
     }, [])
 
     useEffect(() => {
-        if(validateNewExperience(newValue))
+        if (validateNewExperience(newValue))
             setIsDisabled(false)
 
     }, [newValue])
@@ -264,12 +265,12 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled }: Props) 
             groups: newGroup
         }));
 
-        if( newValue?.groups[i - 1]?.title === label || newValue?.groups[i - 1]?.type === value ) 
+        if (newValue?.groups[i - 1]?.title === label || newValue?.groups[i - 1]?.type === value)
             toastNotify(toast, StatusEnumTypes.INFO, `El grupo seleccionado ya existe`)
     }
 
     const addGroup = () => {
-        if(newValue?.groups?.length < 2){
+        if (newValue?.groups?.length < 2) {
             const newGroup = [
                 ...newValue?.groups,
                 {
@@ -315,6 +316,17 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled }: Props) 
                 />
             </Box>
 
+            {fromCalled === "events" &&
+                <Box>
+                    <FormLabel>Events Date</FormLabel>
+                    <Input
+                        name="eventDate"
+                        type="date"
+                        onChange={handleChange}
+                    />
+                </Box>
+            }
+
             <Box>
                 <FormLabel>Multimedia</FormLabel>
 
@@ -325,7 +337,7 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled }: Props) 
                                 flex="1"
                                 name="multimedia"
                                 onChange={(e: any) => changeImage(e, index)}
-                                
+
                             />
 
                             <Box flex="1">
@@ -348,7 +360,7 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled }: Props) 
                 <Input
                     name="title"
                     onChange={handleChange}
-                    
+
                 />
             </Box>
 
@@ -358,7 +370,7 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled }: Props) 
                     <Input
                         name="label"
                         onChange={handleChange}
-                        
+
                     />
                 </Box>
 
@@ -367,7 +379,7 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled }: Props) 
                     <Input
                         name="text"
                         onChange={handleChange}
-                        
+
                     />
                 </Box>
             </Flex>
@@ -379,7 +391,7 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled }: Props) 
                     resize="none"
                     minH="70px"
                     onChange={handleChange}
-                    
+
                 />
             </Box>
 
@@ -390,7 +402,7 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled }: Props) 
                     resize="none"
                     minH="100px"
                     onChange={handleChange}
-                    
+
                 />
             </Box>
 
@@ -403,7 +415,7 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled }: Props) 
                             key={index}
                             name="highlights"
                             onChange={(e: any) => changeHighlights(e, index)}
-                            
+
                         />
                     ))}
                 </Flex>
@@ -435,7 +447,7 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled }: Props) 
                                 flex="1"
                                 name="included"
                                 onChange={(e: any) => changeIncluded(e, index)}
-                                
+
                             />
 
                             <Box flex="1">
@@ -476,21 +488,21 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled }: Props) 
                     <Input
                         name="age"
                         onChange={handleChange}
-                        
+
                     />
 
                     <FormLabel>Details Meeting Point Link</FormLabel>
                     <Input
                         name="pointLink"
                         onChange={handleChange}
-                        
+
                     />
 
                     <FormLabel>Details Meeting Point Label</FormLabel>
                     <Input
                         name="pointLabel"
                         onChange={handleChange}
-                        
+
                     />
                 </Flex>
 
@@ -499,21 +511,21 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled }: Props) 
                     <Input
                         name="ticket"
                         onChange={handleChange}
-                        
+
                     />
 
                     <FormLabel>Details Lenguage</FormLabel>
                     <Input
                         name="language"
                         onChange={handleChange}
-                        
+
                     />
 
                     <FormLabel>Details How long</FormLabel>
                     <Input
                         name="duration"
                         onChange={handleChange}
-                        
+
                     />
                 </Flex>
             </Flex>
@@ -524,7 +536,7 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled }: Props) 
                     <Input
                         name="accessibility"
                         onChange={handleChange}
-                        
+
                     />
                 </Box>
 
@@ -533,7 +545,7 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled }: Props) 
                     <Input
                         name="mobility"
                         onChange={handleChange}
-                        
+
                     />
                 </Box>
 
@@ -542,7 +554,7 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled }: Props) 
                     <Input
                         name="availably"
                         onChange={handleChange}
-                        
+
                     />
                 </Box>
             </Flex>
@@ -572,16 +584,16 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled }: Props) 
                                         index: index
                                     });
                                     onOpen();
-                                }} 
+                                }}
                                 display="flex"
-                                key={index} 
-                                gap="5px" 
+                                key={index}
+                                gap="5px"
                                 alignItems="center"
                                 bg={"rgba(50, 212, 164, .50)"}
-                                _hover={{ bg: "rgba(50, 212, 164, .25)"}}
+                                _hover={{ bg: "rgba(50, 212, 164, .25)" }}
                             >
                                 Edit group
-                                <Icon as={BiEdit} boxSize="20px"/>
+                                <Icon as={BiEdit} boxSize="20px" />
                             </Button>
                         </Flex>
                     ))}
@@ -612,7 +624,7 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled }: Props) 
                     resize="none"
                     minH="200px"
                     onChange={handleChange}
-                    
+
                 />
             </Box>
 
@@ -623,7 +635,7 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled }: Props) 
                     resize="none"
                     minH="50px"
                     onChange={handleChange}
-                    
+
                 />
             </Box>
 
@@ -634,7 +646,7 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled }: Props) 
                     resize="none"
                     minH="100px"
                     onChange={handleChange}
-                    
+
                 />
             </Box>
 

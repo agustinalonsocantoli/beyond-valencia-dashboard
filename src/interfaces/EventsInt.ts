@@ -17,7 +17,7 @@ interface PricesInt {
 
 export interface EventsInt {
     _id?: string;
-    slug: string;
+    slug?: string;
     title: string;
     subtitle: {
         label: string | null;

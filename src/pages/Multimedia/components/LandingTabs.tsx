@@ -22,7 +22,7 @@ export const LandingTabs = ({ experiences, daytrips, food, setRefresh }: Props) 
 
     return (
         <>
-            <Tabs isFitted>
+            <Tabs>
                 <TabList mb='1em'>
                     <Tab>Experiences</Tab>
                     <Tab>Daytrips</Tab>

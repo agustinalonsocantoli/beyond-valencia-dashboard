@@ -95,10 +95,15 @@ export const Partners = () => {
                 title="Partners"
             />
 
-            <CustomTable
-                data={partners}
-                columns={columns}
-            />
+            <Flex
+                w="100%"
+                p="20px"
+            >
+                <CustomTable
+                    data={partners}
+                    columns={columns}
+                />
+            </Flex>
         </Flex>
     );
 };

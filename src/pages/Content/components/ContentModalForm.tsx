@@ -52,7 +52,7 @@ export const ContentModalForm = ({ isOpen, onClose, content, setContent, setRefr
                 const experiences = response?.data?.data;
 
                 experiences.map((experience: ExperiencesInt) => {
-                    return newOptions.push({ value: `/experiences/${experience?.slug}`, label: experience?.title })
+                    return newOptions.push({ value: `/experiences/${experience?._id}`, label: experience?.title })
                 })
 
                 setOptions(newOptions)
@@ -65,7 +65,7 @@ export const ContentModalForm = ({ isOpen, onClose, content, setContent, setRefr
                 const daytrips = response?.data?.data;
 
                 daytrips.map((daytrip: DaystripsInt) => {
-                    return newOptions.push({ value: `/daytrips/${daytrip?.slug}`, label: daytrip?.title })
+                    return newOptions.push({ value: `/daytrips/${daytrip?._id}`, label: daytrip?.title })
                 })
 
                 setOptions(newOptions)

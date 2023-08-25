@@ -29,7 +29,7 @@ export const Content = () => {
                 title="Cards"
             />
 
-            <Box p="10px">
+            <Box px="20px">
                 <CardsView 
                     data={content}
                     setRefresh={setRefresh}

@@ -316,15 +316,6 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled }: Props) 
             </Box>
 
             <Box>
-                <FormLabel>Slug</FormLabel>
-                <Input
-                    name="slug"
-                    onChange={handleChange}
-                    
-                />
-            </Box>
-
-            <Box>
                 <FormLabel>Multimedia</FormLabel>
 
                 <Flex direction="column" gap="5px">

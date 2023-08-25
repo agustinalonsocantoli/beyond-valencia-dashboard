@@ -20,7 +20,7 @@ export const CardsView = ({ data, setRefresh }: Props) => {
 
     return (
         <>
-            <Tabs isFitted>
+            <Tabs>
                 <TabList mb='1em'>
                     <Tab>Home</Tab>
                     <Tab>Experiences</Tab>

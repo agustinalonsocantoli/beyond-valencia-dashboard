@@ -16,6 +16,7 @@ interface PricesInt {
 }
 
 export interface DaystripsInt {
+    _id?: string;
     slug: string;
     title: string;
     subtitle: {

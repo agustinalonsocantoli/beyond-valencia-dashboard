@@ -1,17 +1,15 @@
-import { Flex, useDisclosure, useToast } from "@chakra-ui/react";
+import { Flex, useToast } from "@chakra-ui/react";
 import { Route, Routes, useLocation, useNavigate } from "react-router-dom";
 import { Topbar } from "../../shared/components/Topbar/Topbar";
-import { ExperiencesTable } from "./views/ExperiencesTable";
 import { BiAddToQueue, BiPlusCircle, BiRefresh } from "react-icons/bi";
-import { ExperiencesInformation } from "./views/ExperiencesInformation";
 import { useEffect, useState } from "react";
 import { ExperiencesInt } from "../../interfaces/ExperiencesInt";
 import { addExperience, updateExperiences } from "../../shared/middlewares/experiences.middleware";
 import { toastNotify } from "../../shared/utils/toastNotify";
 import { StatusEnumTypes } from "../../shared/Types/StatusEnumTypes";
-import { NewExperience } from "./views/NewExperience";
+import { DaytripsTable } from "./views/DaytripsTable";
 
-export const Experiences = () => {
+export const Daytrips = () => {
     const location = useLocation();
     const toast = useToast();
     const navigate = useNavigate();
@@ -33,7 +31,7 @@ export const Experiences = () => {
             })
             .then(() => {
                 setCurrentValue(undefined);
-                navigate(`/experiences`)
+                navigate(`/daytrips`)
                 toastNotify(toast, StatusEnumTypes.SUCCESS, "Datos actualizados con exito");
             })
             .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error al actualizar los datos"))
@@ -44,10 +42,10 @@ export const Experiences = () => {
             addExperience(newValue)
             .then(() => {
                 setNewValue(undefined);
-                navigate(`/experiences`)
-                toastNotify(toast, StatusEnumTypes.SUCCESS, "Experience creada con exitos");
+                navigate(`/daytrips`)
+                toastNotify(toast, StatusEnumTypes.SUCCESS, "Daytrips creado con exito");
             })
-            .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error al crear la Experience"))
+            .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error al crear Daytrips"))
     }
 
     return (
@@ -56,20 +54,20 @@ export const Experiences = () => {
             w="100%"
         >
             <Topbar
-                title="Experiences"
+                title="Daytrips"
                 buttons={
-                    location.pathname.includes("/experiences/new")
+                    location.pathname.includes("/daytrip/new")
                         ?
                         [
                             {
-                                label: "Crear experience",
+                                label: "Crear daytrip",
                                 onClick: () => addData(),
                                 icon: BiAddToQueue,
                                 isDisabled: isDisabled,
                                 requiredText: "Debe completar todos los datos"
                             }
                         ]
-                        : location.pathname.startsWith("/experiences/")
+                        : location.pathname.startsWith("/daytrip/")
                         ?   
                         [
                             {
@@ -83,8 +81,8 @@ export const Experiences = () => {
                         :
                         [
                             {
-                                label: "Nueva experience",
-                                onClick: () => navigate("/experiences/new"),
+                                label: "Nuevo daytrip",
+                                onClick: () => navigate("/daytrip/new"),
                                 icon: BiPlusCircle
                             }
                         ]
@@ -97,11 +95,10 @@ export const Experiences = () => {
             >
                 <Routes>
                     <Route index element={
-                        <ExperiencesTable
-                        />
+                        <DaytripsTable />
                     }
                     />
-
+{/* 
                     <Route path=":id" element={
                         <ExperiencesInformation
                             setId={setId}
@@ -119,7 +116,7 @@ export const Experiences = () => {
                             setIsDisabled={setIsDisabled}
                         />
                     }
-                    />
+                    /> */}
                 </Routes>
             </Flex>
         </Flex>

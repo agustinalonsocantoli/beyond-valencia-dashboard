@@ -1,7 +1,7 @@
 import { Flex, useToast } from "@chakra-ui/react"
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom"
-import { getExperienceBySlug } from "../../../shared/middlewares/experiences.middleware";
+import { getExperienceById } from "../../../shared/middlewares/experiences.middleware";
 import { AxiosResponse } from "axios";
 import { toastNotify } from "../../../shared/utils/toastNotify";
 import { StatusEnumTypes } from "../../../shared/Types/StatusEnumTypes";
@@ -12,33 +12,33 @@ import { ExperiencesInt } from "../../../interfaces/ExperiencesInt";
 interface Props {
     currentValue: any,
     setCurrentValue: (action: any) => void;
-    setSlug: (action: string) => void;
+    setId: (action: string) => void;
     setIsDisabled: (action: boolean) => void;
 }
 
-export const ExperiencesInformation = ({ currentValue, setCurrentValue, setSlug, setIsDisabled }: Props) => {
-    const { slug } = useParams();
+export const ExperiencesInformation = ({ currentValue, setCurrentValue, setId, setIsDisabled }: Props) => {
+    const { id } = useParams();
     const toast = useToast();
     const [experience, setExperience] = useState<ExperiencesInt>();
     const [refresh, setRefresh] = useState<boolean>(true);
 
     useEffect(() => {
-        slug &&
-            setSlug(slug)
+        id &&
+            setId(id)
 
-    }, [slug])
+    }, [id])
 
     useEffect(() => {
         refresh &&
-            slug &&
-            getExperienceBySlug(slug)
+            id &&
+            getExperienceById(id)
                 .then((response: AxiosResponse) => {
                     setExperience(response?.data?.data);
                     setRefresh(false)
                 })
                 .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte."))
 
-    }, [refresh, slug])
+    }, [refresh, id])
 
     useEffect(() => {
         experience &&

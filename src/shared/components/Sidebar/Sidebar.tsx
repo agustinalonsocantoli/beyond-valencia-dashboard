@@ -20,8 +20,6 @@ interface ItemsMenuInt {
 }
 
 export const Sidebar = () => {
-    const { logout } = useAuthContex();
-    const navigate = useNavigate()
     const toast = useToast();
     const location = useLocation();
     const motion = usePrefersReducedMotion()
@@ -110,6 +108,7 @@ export const Sidebar = () => {
             h="100vh"
             borderRight="1px solid #E2E8F0"
             p="10px"
+            minW="200px"
             justifyContent="space-between"
         >
             <Flex 
@@ -148,7 +147,7 @@ export const Sidebar = () => {
 
 const open = keyframes`
     from { 
-        transform: translateX(-175px);
+        transform: translateX(-200px);
     }
     to { 
         transform: translateX(0);

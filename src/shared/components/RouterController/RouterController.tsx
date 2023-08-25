@@ -10,6 +10,7 @@ import { Content } from "../../../pages/Content/Content";
 import { Multimedia } from "../../../pages/Multimedia/Multimedia";
 import { Bikes } from "../../../pages/Bikes/Bikes";
 import { Lockers } from "../../../pages/Lockers/Lockers";
+import { Daytrips } from "../../../pages/Daytrips/Daytrips";
 
 export const RouterController = () => {
     const { user } = useAuthContex();
@@ -27,7 +28,7 @@ export const RouterController = () => {
             </Route>
 
             <Route element={<RequireAuth />}>
-                <Route path='daytrips/*' element={<Heading>Daytrips</Heading>} />
+                <Route path='daytrips/*' element={<Daytrips />} />
             </Route>
 
             <Route element={<RequireAuth />}>

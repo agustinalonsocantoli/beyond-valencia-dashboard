@@ -16,6 +16,7 @@ export interface PricesInt {
 }
 
 export interface ExperiencesInt {
+    _id?: string;
     slug: string;
     title: string;
     subtitle: {

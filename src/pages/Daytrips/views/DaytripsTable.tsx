@@ -14,7 +14,7 @@ import { PricesElements } from '../../../shared/components/ColumnElements/Prices
 import { ActionsElements } from '../../../shared/components/ColumnElements/ActionsElements';
 import { useNavigate } from 'react-router-dom';
 
-export const ExperiencesTable = () => {
+export const DaytripsTable = () => {
     const toast = useToast();
     const navigate = useNavigate();
     const [experiences, setExperiences] = useState<any>();

@@ -70,7 +70,7 @@ export const Bikes = () => {
             header="Medium Price"
             body={(rowData: any) => TextElement(
                 {
-                    title: { text: `${rowData?.price?.medium}€`}
+                    title: { text: `${rowData?.price?.medium}€` }
                 }
             )}
         />,
@@ -88,7 +88,7 @@ export const Bikes = () => {
                 remove: {
                     onClick: () => {
                         deleteBike(rowData?._id)
-                        .then(() => setRefreshTable(true))
+                            .then(() => setRefreshTable(true))
                     },
                 }
             })}
@@ -111,10 +111,15 @@ export const Bikes = () => {
                 ]}
             />
 
-            <CustomTable
-                data={bikes}
-                columns={columns}
-            />
+            <Flex
+                w="100%"
+                p="20px"
+            >
+                <CustomTable
+                    data={bikes}
+                    columns={columns}
+                />
+            </Flex>
 
             <NewBikesModalForm
                 isOpen={isOpen}
@@ -122,7 +127,7 @@ export const Bikes = () => {
                 setRefresh={setRefreshTable}
             />
 
-            <EditBikesModalForm 
+            <EditBikesModalForm
                 isOpen={isOpenEdit}
                 onClose={onCloseEdit}
                 setRefresh={setRefreshTable}

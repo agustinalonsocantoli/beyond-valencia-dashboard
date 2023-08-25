@@ -5,7 +5,6 @@ import { ProductInt } from "../../interfaces/ProductInt";
 export const validateNewExperience = (experience: ExperiencesInt): boolean => {
     if(
         experience?.published &&
-        experience?.slug &&
         (experience?.multimedia?.length == 4) &&
         experience?.title &&
         experience?.subtitle?.label &&

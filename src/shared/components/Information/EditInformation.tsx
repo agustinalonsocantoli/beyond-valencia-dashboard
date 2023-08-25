@@ -310,15 +310,6 @@ export const EditInformation = ({ currentValue, setCurrentValue, setIsDisabled }
             </Box>
 
             <Box>
-                <FormLabel>Slug</FormLabel>
-                <Input
-                    name="slug"
-                    onChange={handleChange}
-                    defaultValue={currentValue?.slug}
-                />
-            </Box>
-
-            <Box>
                 <FormLabel>Multimedia</FormLabel>
 
                 <Flex direction="column" gap="5px">

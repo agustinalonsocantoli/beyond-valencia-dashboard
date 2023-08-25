@@ -82,7 +82,7 @@ export const Codes = () => {
             header="Fecha de Creacion"
             body={(rowData: any) => DateElement({ content: rowData?.createdAt })}
         />,
-        <Column 
+        <Column
             key=""
             field=""
             header=""
@@ -97,7 +97,7 @@ export const Codes = () => {
                 remove: {
                     onClick: () => {
                         deleteCode(rowData?._id)
-                        .then(() => setRefreshTable(true))
+                            .then(() => setRefreshTable(true))
                     },
                 }
             })}
@@ -119,10 +119,15 @@ export const Codes = () => {
                 ]}
             />
 
-            <CustomTable
-                data={codes}
-                columns={columns}
-            />
+            <Flex
+                w="100%"
+                p="20px"
+            >
+                <CustomTable
+                    data={codes}
+                    columns={columns}
+                />
+            </Flex>
 
             <CodeModalForm
                 isOpen={isOpen}

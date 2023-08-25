@@ -28,7 +28,6 @@ export const Topbar = ({
             h="75px"
             w="100%"
             px="20px"
-            borderBottom="1px solid #e2e8f0"
         >
             <Flex
                 alignItems="center"

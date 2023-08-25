@@ -16,10 +16,11 @@ interface PricesInt {
 }
 
 export interface EventsInt {
+    _id?: string;
     slug: string;
     title: string;
     subtitle: {
-        label: string;
+        label: string | null;
         text: string;
     }
     headline: string;
@@ -44,10 +45,10 @@ export interface EventsInt {
         {
             text: string;
             state: boolean;
-        }[] | null;
+        }[];
     takeWithYou: string[];
     groups: OrdersGroupsInt[];
-    policies: string;
+    policies: string | null;
     conditions: string;
     published: boolean;
     eventDate: Date;

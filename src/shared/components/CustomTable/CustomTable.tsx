@@ -1,5 +1,6 @@
 import { DataTable } from 'primereact/datatable';
-import { useSidebarView } from '../../context/sidebar.context';
+import "./CustomTable.css"
+import { Flex } from '@chakra-ui/react';
 
 interface Props {
     columns: JSX.Element[];
@@ -16,23 +17,27 @@ export const CustomTable = ({
     columns,
     data,
     style,
-    onRowClick = (e: any) => {},
+    onRowClick = (e: any) => { },
     totalRecords,
     sortField,
     sortOrder,
     filterDisplay = "menu"
 }: Props) => {
-    const { sidebarView } = useSidebarView();
 
     return (
-        <div className="card">
-            <DataTable 
+        <Flex
+            w="100%"
+            border="1px solid #e2e8f0"
+            borderRadius="10px"
+            overflow="hidden"
+        >
+            <DataTable
                 emptyMessage="No se han encontrado resultados"
-                value={data} 
-                paginator 
-                rows={10} 
+                value={data}
+                paginator
+                rows={10}
                 tableStyle={{
-                    width: sidebarView ? "calc(100vw - 175px)" : "100vw",
+                    width: "100%"
                 }}
                 filterDisplay={filterDisplay}
                 style={style}
@@ -44,6 +49,6 @@ export const CustomTable = ({
             >
                 {columns}
             </DataTable>
-        </div>
+        </Flex>
     );
 }

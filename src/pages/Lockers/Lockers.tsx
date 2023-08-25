@@ -99,7 +99,7 @@ export const Lockers = () => {
                 remove: {
                     onClick: () => {
                         deleteLocker(rowData?._id)
-                        .then(() => setRefreshTable(true))
+                            .then(() => setRefreshTable(true))
                     },
                 }
             })}
@@ -122,10 +122,15 @@ export const Lockers = () => {
                 ]}
             />
 
-            <CustomTable
-                data={lockers}
-                columns={columns}
-            />
+            <Flex
+                w="100%"
+                p="20px"
+            >
+                <CustomTable
+                    data={lockers}
+                    columns={columns}
+                />
+            </Flex>
 
             <NewLockersModalForm
                 isOpen={isOpen}

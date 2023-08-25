@@ -59,7 +59,7 @@ export const Multimedia = () => {
                 title="Multimedia"
             />
 
-            <Box p="10px">
+            <Box px="20px">
                 <LandingTabs 
                     experiences={experiences}
                     daytrips={daytrips}

@@ -2,7 +2,7 @@ import { Flex, useToast } from '@chakra-ui/react';
 import { Column } from 'primereact/column';
 import { useEffect, useState } from 'react';
 import { deleteExperiences, getExperiences } from '../../../shared/middlewares/experiences.middleware';
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { toastNotify } from '../../../shared/utils/toastNotify';
 import { StatusEnumTypes } from '../../../shared/Types/StatusEnumTypes';
 import { CustomTable } from '../../../shared/components/CustomTable/CustomTable';
@@ -12,10 +12,12 @@ import { TextElement } from '../../../shared/components/ColumnElements/TextEleme
 import { DateElement } from '../../../shared/components/ColumnElements/DateElement';
 import { PricesElements } from '../../../shared/components/ColumnElements/PricesElements';
 import { ActionsElements } from '../../../shared/components/ColumnElements/ActionsElements';
-import { useNavigate } from 'react-router-dom';
+import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { ExperiencesInt } from '../../../interfaces/ExperiencesInt';
+import { useAuthContex } from '../../../shared/context/auth.context';
 
 export const ExperiencesTable = () => {
+    const { logout } = useAuthContex();
     const toast = useToast();
     const navigate = useNavigate();
     const [experiences, setExperiences] = useState<ExperiencesInt>();
@@ -28,7 +30,18 @@ export const ExperiencesTable = () => {
                     setExperiences(response?.data?.data);
                     setRefreshTable(false)
                 })
-                .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte."))
+                .catch((error: AxiosError) => {
+                    if(error?.response?.status === 401) {
+                        logout(
+                            navigate, 
+                            toast, 
+                            StatusEnumTypes.ERROR, 
+                            "Su Token ha caducado, vuelva a iniciar sesion"
+                        )
+                    } else {
+                        toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte.")
+                    }
+                })
 
     }, [refreshTable])
 
@@ -39,7 +52,18 @@ export const ExperiencesTable = () => {
         id &&
             deleteExperiences(id)
                 .then(() => toastNotify(toast, StatusEnumTypes.SUCCESS, "Experience borrada con exito"))
-                .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error al borrar Experience"))
+                .catch((error: AxiosError) => {
+                    if(error?.response?.status === 401) {
+                        logout(
+                            navigate, 
+                            toast, 
+                            StatusEnumTypes.ERROR, 
+                            "Su Token ha caducado, vuelva a iniciar sesion"
+                        )
+                    } else {
+                        toastNotify(toast, StatusEnumTypes.ERROR, "Error al borrar Experience")
+                    }
+                })
     }
 
     const columns = [

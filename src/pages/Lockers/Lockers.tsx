@@ -4,7 +4,7 @@ import { Topbar } from "../../shared/components/Topbar/Topbar";
 import { Column } from "primereact/column";
 import { useEffect, useState } from "react";
 import { ProductInt } from "../../interfaces/ProductInt";
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import { toastNotify } from "../../shared/utils/toastNotify";
 import { StatusEnumTypes } from "../../shared/Types/StatusEnumTypes";
 import { ActionsElements } from "../../shared/components/ColumnElements/ActionsElements";
@@ -13,8 +13,12 @@ import { BiPlusCircle } from "react-icons/bi";
 import { NewLockersModalForm } from "./Components/NewLockersModalForm";
 import { EditLockersModalForm } from "./Components/EditLockersModalForm";
 import { deleteLocker, getLockers } from "../../shared/middlewares/lockers.middleware";
+import { useNavigate } from "react-router-dom";
+import { useAuthContex } from "../../shared/context/auth.context";
 
 export const Lockers = () => {
+    const { logout } = useAuthContex();
+    const navigate = useNavigate();
     const toast = useToast();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const { isOpen: isOpenEdit, onOpen: onOpenEdit, onClose: onCloseEdit } = useDisclosure();
@@ -30,7 +34,18 @@ export const Lockers = () => {
                     console.log(response?.data?.data);
                     setRefreshTable(false)
                 })
-                .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte"))
+                .catch((error: AxiosError) => {
+                    if(error?.response?.status === 401) {
+                        logout(
+                            navigate, 
+                            toast, 
+                            StatusEnumTypes.ERROR, 
+                            "Su Token ha caducado, vuelva a iniciar sesion"
+                        )
+                    } else {
+                        toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte.")
+                    }
+                })
 
     }, [refreshTable])
 

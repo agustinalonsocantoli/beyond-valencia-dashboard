@@ -1,3 +1,5 @@
+import { StatusEnumTypes } from "../shared/Types/StatusEnumTypes";
+
 export interface UserInt {
     id?: string | number | null;
     auth: boolean;
@@ -20,5 +22,5 @@ export interface UserContextInt {
     setUser: (action: any) => any;
     refreshUser: (updateUser: UpdateUserInt) => void;
     login: ( jwt: string, user: UserInt, navigate: (path: string) => void ) => any;
-    logout: ( navigate: (path: string) => void, toast: any ) => any;
+    logout: ( navigate: (path: string) => void, toast: any, statusType?: StatusEnumTypes, message?: string ) => any;
 }

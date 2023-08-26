@@ -1,18 +1,20 @@
 import { Box, Flex, useToast } from "@chakra-ui/react";
 import { Topbar } from "../../shared/components/Topbar/Topbar";
 import { useEffect, useState } from "react";
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import { getAllMultimedia } from "../../shared/middlewares/multimedia.middleware";
 import { LandingTabs } from "./components/LandingTabs";
-import { ExperiencesInt } from "../../interfaces/ExperiencesInt";
-import { DaystripsInt } from "../../interfaces/DaytripsInt";
 import { toastNotify } from "../../shared/utils/toastNotify";
 import { StatusEnumTypes } from "../../shared/Types/StatusEnumTypes";
 import { MultimediaInt } from "../../interfaces/MultimediaInt";
 import { LandingEnumTypes } from "../../shared/Types/LadingEnumTypes";
+import { useNavigate } from "react-router-dom";
+import { useAuthContex } from "../../shared/context/auth.context";
 
 export const Multimedia = () => {
     const toast = useToast();
+    const { logout } = useAuthContex();
+    const navigate = useNavigate();
     const [experiences, setExperiences] = useState<MultimediaInt[]>()
     const [daytrips, setDaytrips] = useState<MultimediaInt[]>()
     const [food, setFood] = useState<MultimediaInt[]>()
@@ -46,7 +48,18 @@ export const Multimedia = () => {
                 setFood(newFood);
                 setRefresh(false);
             })
-            .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error al obtener datos, actualice o contacte a soporte"))
+            .catch((error: AxiosError) => {
+                if(error?.response?.status === 401) {
+                    logout(
+                        navigate, 
+                        toast, 
+                        StatusEnumTypes.ERROR, 
+                        "Su Token ha caducado, vuelva a iniciar sesion"
+                    )
+                } else {
+                    toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte.")
+                }
+            })
 
     }, [refresh])
 

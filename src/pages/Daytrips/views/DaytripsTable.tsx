@@ -1,7 +1,7 @@
 import { Flex, useToast } from '@chakra-ui/react';
 import { Column } from 'primereact/column';
 import { useEffect, useState } from 'react';
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { toastNotify } from '../../../shared/utils/toastNotify';
 import { StatusEnumTypes } from '../../../shared/Types/StatusEnumTypes';
 import { CustomTable } from '../../../shared/components/CustomTable/CustomTable';
@@ -14,10 +14,12 @@ import { ActionsElements } from '../../../shared/components/ColumnElements/Actio
 import { useNavigate } from 'react-router-dom';
 import { deleteDaytrip, getDaytrips } from '../../../shared/middlewares/daytrips.middleware';
 import { DaystripsInt } from '../../../interfaces/DaytripsInt';
+import { useAuthContex } from '../../../shared/context/auth.context';
 
 export const DaytripsTable = () => {
     const toast = useToast();
     const navigate = useNavigate();
+    const { logout } = useAuthContex();
     const [daytrips, setDaytrips] = useState<DaystripsInt>();
     const [refreshTable, setRefreshTable] = useState<boolean>(true);
 
@@ -28,8 +30,19 @@ export const DaytripsTable = () => {
                     setDaytrips(response?.data?.data);
                     setRefreshTable(false)
                 })
-                .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte."))
-
+                .catch((error: AxiosError) => {
+                    if(error?.response?.status === 401) {
+                        logout(
+                            navigate, 
+                            toast, 
+                            StatusEnumTypes.ERROR, 
+                            "Su Token ha caducado, vuelva a iniciar sesion"
+                        )
+                    } else {
+                        toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte.")
+                    }
+                })
+                
     }, [refreshTable])
 
     const onRowClick = async (e: any) =>
@@ -39,7 +52,18 @@ export const DaytripsTable = () => {
         id &&
             deleteDaytrip(id)
             .then(() => toastNotify(toast, StatusEnumTypes.SUCCESS, "Daytrip borrada con exito"))
-            .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error al borrar Daytrip"))
+            .catch((error: AxiosError) => {
+                if(error?.response?.status === 401) {
+                    logout(
+                        navigate, 
+                        toast, 
+                        StatusEnumTypes.ERROR, 
+                        "Su Token ha caducado, vuelva a iniciar sesion"
+                    )
+                } else {
+                    toastNotify(toast, StatusEnumTypes.ERROR, "Error al borrar Daytrip")
+                }
+            })
     }
 
     const columns = [

@@ -18,11 +18,13 @@ import { InformationSelect } from "../../../shared/components/Elements/Informati
 import { LandingEnumTypes } from "../../../shared/Types/LadingEnumTypes";
 import { getExperiences } from "../../../shared/middlewares/experiences.middleware";
 import { getDaytrips } from "../../../shared/middlewares/daytrips.middleware";
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import { ExperiencesInt } from "../../../interfaces/ExperiencesInt";
 import { DaystripsInt } from "../../../interfaces/DaytripsInt";
 import { MultimediaInt } from "../../../interfaces/MultimediaInt";
 import { updateMultimedia } from "../../../shared/middlewares/multimedia.middleware";
+import { useNavigate } from "react-router-dom";
+import { useAuthContex } from "../../../shared/context/auth.context";
 
 interface Props {
     isOpen: boolean;
@@ -34,6 +36,8 @@ interface Props {
 
 export const MultimediaModalForm = ({ isOpen, onClose, multimedia, setMultimedia, setRefresh }: Props) => {
     const toast = useToast();
+    const { logout } = useAuthContex();
+    const navigate = useNavigate();
     const [currentValue, setCurrentValue] = useState<MultimediaInt>();
     const [options, setOptions] = useState<{value: string, label: string}[]>([]);
 
@@ -56,7 +60,18 @@ export const MultimediaModalForm = ({ isOpen, onClose, multimedia, setMultimedia
 
                 setOptions(newOptions)
             })
-            .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "No se han podido cargar las opciones"))
+            .catch((error: AxiosError) => {
+                if(error?.response?.status === 401) {
+                    logout(
+                        navigate, 
+                        toast, 
+                        StatusEnumTypes.ERROR, 
+                        "Su Token ha caducado, vuelva a iniciar sesion"
+                    )
+                } else {
+                    toastNotify(toast, StatusEnumTypes.ERROR, "No se han podido cargar las opciones")
+                }
+            })
         }
         if(multimedia?.landing === LandingEnumTypes.DAYTRIPS) {
             getDaytrips()
@@ -69,7 +84,18 @@ export const MultimediaModalForm = ({ isOpen, onClose, multimedia, setMultimedia
 
                 setOptions(newOptions)
             })
-            .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "No se han podido cargar las opciones"))
+            .catch((error: AxiosError) => {
+                if(error?.response?.status === 401) {
+                    logout(
+                        navigate, 
+                        toast, 
+                        StatusEnumTypes.ERROR, 
+                        "Su Token ha caducado, vuelva a iniciar sesion"
+                    )
+                } else {
+                    toastNotify(toast, StatusEnumTypes.ERROR, "No se han podido cargar las opciones")
+                }
+            })
         }
     }, [multimedia?.landing])
 
@@ -105,7 +131,18 @@ export const MultimediaModalForm = ({ isOpen, onClose, multimedia, setMultimedia
             onClose();
             toastNotify(toast, StatusEnumTypes.SUCCESS, "Multimedia actualizada")
         })
-        .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte"))
+        .catch((error: AxiosError) => {
+            if(error?.response?.status === 401) {
+                logout(
+                    navigate, 
+                    toast, 
+                    StatusEnumTypes.ERROR, 
+                    "Su Token ha caducado, vuelva a iniciar sesion"
+                )
+            } else {
+                toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte.")
+            }
+        })
     };
 
     return (

@@ -7,6 +7,9 @@ import { addCodes, updateCodes } from "../../../shared/middlewares/codes.middlew
 import { PartnertsEnumTypes } from "../../../shared/Types/PartnersEnumTypes";
 import { addPartner } from "../../../shared/middlewares/partners.middleware";
 import { useEffect, useState } from "react";
+import { AxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
+import { useAuthContex } from "../../../shared/context/auth.context";
 
 interface Props {
     isOpen: boolean;
@@ -20,6 +23,8 @@ interface Props {
 
 export const CodeModalForm = ({ isOpen, onClose, editForm, setEditForm, setRefresh, defaultValue, setCodeEdit }: Props) => {
     const toast = useToast();
+    const { logout } = useAuthContex();
+    const navigate = useNavigate();
     const [currentValue, setCurrentValue] = useState<any>(defaultValue);
 
     useEffect(() => {
@@ -57,7 +62,18 @@ export const CodeModalForm = ({ isOpen, onClose, editForm, setEditForm, setRefre
                     .then(() => toastNotify(toast, StatusEnumTypes.SUCCESS, "Se ha creado un Partner"))
                     .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error al crear Partner"))
             })
-            .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte"))
+            .catch((error: AxiosError) => {
+                if(error?.response?.status === 401) {
+                    logout(
+                        navigate, 
+                        toast, 
+                        StatusEnumTypes.ERROR, 
+                        "Su Token ha caducado, vuelva a iniciar sesion"
+                    )
+                } else {
+                    toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte.")
+                }
+            })
         } else {
             updateCodes({
                 id: currentValue?._id,
@@ -67,7 +83,18 @@ export const CodeModalForm = ({ isOpen, onClose, editForm, setEditForm, setRefre
                 setRefresh(true);
                 toastNotify(toast, StatusEnumTypes.SUCCESS, "Su codigo fue actualizado")
             })
-            .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte"))
+                            .catch((error: AxiosError) => {
+                    if(error?.response?.status === 401) {
+                        logout(
+                            navigate, 
+                            toast, 
+                            StatusEnumTypes.ERROR, 
+                            "Su Token ha caducado, vuelva a iniciar sesion"
+                        )
+                    } else {
+                        toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte.")
+                    }
+                })
         }
         
         setCodeEdit(null)

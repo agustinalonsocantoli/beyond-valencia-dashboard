@@ -41,6 +41,8 @@ function App() {
   const logout = (
     navigate: (path: string) => void,
     toast: any,
+    statusType = StatusEnumTypes.INFO,
+    message = "Sesion finalizada"
   ) => {
     localStorage.removeItem('token');
     localStorage.removeItem('perfil');
@@ -55,7 +57,7 @@ function App() {
     });
 
     navigate('/login')
-    toastNotify(toast, StatusEnumTypes.INFO, "Sesion finalizada")
+    toastNotify(toast, statusType, message)
   };
 
   const refreshUser = async (updateUser: UpdateUserInt) => {

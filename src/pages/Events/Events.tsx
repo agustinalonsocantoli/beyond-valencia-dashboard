@@ -10,9 +10,12 @@ import { EventsInt } from "../../interfaces/EventsInt";
 import { EventsTable } from "./views/EventsTable";
 import { EventsInformation } from "./views/EventsInformation";
 import { NewEvents } from "./views/NewEvents";
+import { useAuthContex } from "../../shared/context/auth.context";
+import { AxiosError } from "axios";
 
 export const Events = () => {
     const location = useLocation();
+    const { logout } = useAuthContex();
     const toast = useToast();
     const navigate = useNavigate();
     const [id, setId] = useState<string>()
@@ -36,7 +39,18 @@ export const Events = () => {
                 navigate(`/events`)
                 toastNotify(toast, StatusEnumTypes.SUCCESS, "Datos actualizados con exito");
             })
-            .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error al actualizar los datos"))
+            .catch((error: AxiosError) => {
+                if(error?.response?.status === 401) {
+                    logout(
+                        navigate, 
+                        toast, 
+                        StatusEnumTypes.ERROR, 
+                        "Su Token ha caducado, vuelva a iniciar sesion"
+                    )
+                } else {
+                    toastNotify(toast, StatusEnumTypes.ERROR, "Error al actualizar los datos")
+                }
+            })
     }
 
     const addData = () => {
@@ -47,7 +61,18 @@ export const Events = () => {
                 navigate(`/events`)
                 toastNotify(toast, StatusEnumTypes.SUCCESS, "Event creado con exito");
             })
-            .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error al crear Event"))
+            .catch((error: AxiosError) => {
+                if(error?.response?.status === 401) {
+                    logout(
+                        navigate, 
+                        toast, 
+                        StatusEnumTypes.ERROR, 
+                        "Su Token ha caducado, vuelva a iniciar sesion"
+                    )
+                } else {
+                    toastNotify(toast, StatusEnumTypes.ERROR, "Error al crear Event")
+                }
+            })
     }
 
     return (

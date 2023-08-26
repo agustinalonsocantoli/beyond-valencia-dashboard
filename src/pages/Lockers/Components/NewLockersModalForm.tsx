@@ -7,6 +7,9 @@ import { ProductsEnumTypes } from "../../../shared/Types/ProductsEnumTypes";
 import { ProductInt } from "../../../interfaces/ProductInt";
 import { validateNewProducts } from "../../../shared/utils/validateData";
 import { addLocker } from "../../../shared/middlewares/lockers.middleware";
+import { AxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
+import { useAuthContex } from "../../../shared/context/auth.context";
 
 interface Props {
     isOpen: boolean;
@@ -16,6 +19,8 @@ interface Props {
 
 export const NewLockersModalForm = ({ isOpen, onClose, setRefresh }: Props) => {
     const toast = useToast();
+    const { logout } = useAuthContex();
+    const navigate = useNavigate();
     const [currentValue, setCurrentValue] = useState<ProductInt>();
     const [isDisabled, setIsDisabled] = useState<boolean>(true);
 
@@ -81,7 +86,18 @@ export const NewLockersModalForm = ({ isOpen, onClose, setRefresh }: Props) => {
             toastNotify(toast, StatusEnumTypes.SUCCESS, "Su codigo fue creado")
 
         })
-        .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte"))
+        .catch((error: AxiosError) => {
+            if(error?.response?.status === 401) {
+                logout(
+                    navigate, 
+                    toast, 
+                    StatusEnumTypes.ERROR, 
+                    "Su Token ha caducado, vuelva a iniciar sesion"
+                )
+            } else {
+                toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte.")
+            }
+        })
 
         setCurrentValue(undefined);
         onClose();

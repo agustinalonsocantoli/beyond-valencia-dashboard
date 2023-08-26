@@ -1,7 +1,7 @@
 import { Flex, useToast } from '@chakra-ui/react';
 import { Column } from 'primereact/column';
 import { useEffect, useState } from 'react';
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { toastNotify } from '../../../shared/utils/toastNotify';
 import { StatusEnumTypes } from '../../../shared/Types/StatusEnumTypes';
 import { CustomTable } from '../../../shared/components/CustomTable/CustomTable';
@@ -14,9 +14,11 @@ import { ActionsElements } from '../../../shared/components/ColumnElements/Actio
 import { useNavigate } from 'react-router-dom';
 import { EventsInt } from '../../../interfaces/EventsInt';
 import { getEvents, deleteEvent } from '../../../shared/middlewares/events.middleware';
+import { useAuthContex } from '../../../shared/context/auth.context';
 
 export const EventsTable = () => {
     const toast = useToast();
+    const { logout } = useAuthContex();
     const navigate = useNavigate();
     const [events, setEvents] = useState<EventsInt>();
     const [refreshTable, setRefreshTable] = useState<boolean>(true);
@@ -28,7 +30,18 @@ export const EventsTable = () => {
                     setEvents(response?.data?.data);
                     setRefreshTable(false)
                 })
-                .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte."))
+                .catch((error: AxiosError) => {
+                    if(error?.response?.status === 401) {
+                        logout(
+                            navigate, 
+                            toast, 
+                            StatusEnumTypes.ERROR, 
+                            "Su Token ha caducado, vuelva a iniciar sesion"
+                        )
+                    } else {
+                        toastNotify(toast, StatusEnumTypes.ERROR, "Error al actualizar los datos")
+                    }
+                })
 
     }, [refreshTable])
 
@@ -39,7 +52,18 @@ export const EventsTable = () => {
         id &&
             deleteEvent(id)
                 .then(() => toastNotify(toast, StatusEnumTypes.SUCCESS, "Event borrada con exito"))
-                .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error al borrar Event"))
+                .catch((error: AxiosError) => {
+                    if(error?.response?.status === 401) {
+                        logout(
+                            navigate, 
+                            toast, 
+                            StatusEnumTypes.ERROR, 
+                            "Su Token ha caducado, vuelva a iniciar sesion"
+                        )
+                    } else {
+                        toastNotify(toast, StatusEnumTypes.ERROR, "Error al borrar Event")
+                    }
+                })
     }
 
     const columns = [

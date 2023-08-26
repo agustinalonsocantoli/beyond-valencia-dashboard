@@ -10,10 +10,13 @@ import { addExperience, updateExperiences } from "../../shared/middlewares/exper
 import { toastNotify } from "../../shared/utils/toastNotify";
 import { StatusEnumTypes } from "../../shared/Types/StatusEnumTypes";
 import { NewExperience } from "./views/NewExperience";
+import { AxiosError } from "axios";
+import { useAuthContex } from "../../shared/context/auth.context";
 
 export const Experiences = () => {
     const location = useLocation();
     const toast = useToast();
+    const { logout } = useAuthContex();
     const navigate = useNavigate();
     const [id, setId] = useState<string>()
     const [currentValue, setCurrentValue] = useState<ExperiencesInt>()
@@ -36,7 +39,18 @@ export const Experiences = () => {
                 navigate(`/experiences`)
                 toastNotify(toast, StatusEnumTypes.SUCCESS, "Datos actualizados con exito");
             })
-            .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error al actualizar los datos"))
+            .catch((error: AxiosError) => {
+                if(error?.response?.status === 401) {
+                    logout(
+                        navigate, 
+                        toast, 
+                        StatusEnumTypes.ERROR, 
+                        "Su Token ha caducado, vuelva a iniciar sesion"
+                    )
+                } else {
+                    toastNotify(toast, StatusEnumTypes.ERROR, "Error al actualizar los datos")
+                }
+            })
     }
 
     const addData = () => {
@@ -47,7 +61,18 @@ export const Experiences = () => {
                 navigate(`/experiences`)
                 toastNotify(toast, StatusEnumTypes.SUCCESS, "Experience creada con exitos");
             })
-            .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error al crear la Experience"))
+            .catch((error: AxiosError) => {
+                if(error?.response?.status === 401) {
+                    logout(
+                        navigate, 
+                        toast, 
+                        StatusEnumTypes.ERROR, 
+                        "Su Token ha caducado, vuelva a iniciar sesion"
+                    )
+                } else {
+                    toastNotify(toast, StatusEnumTypes.ERROR, "Error al crear la Experience")
+                }
+            })
     }
 
     return (

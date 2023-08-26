@@ -19,10 +19,12 @@ import { InformationSelect } from "../../../shared/components/Elements/Informati
 import { LandingEnumTypes } from "../../../shared/Types/LadingEnumTypes";
 import { getExperiences } from "../../../shared/middlewares/experiences.middleware";
 import { getDaytrips } from "../../../shared/middlewares/daytrips.middleware";
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import { ExperiencesInt } from "../../../interfaces/ExperiencesInt";
 import { DaystripsInt } from "../../../interfaces/DaytripsInt";
 import { updateContent } from "../../../shared/middlewares/content.middleware";
+import { useNavigate } from "react-router-dom";
+import { useAuthContex } from "../../../shared/context/auth.context";
 
 interface Props {
     isOpen: boolean;
@@ -34,6 +36,8 @@ interface Props {
 
 export const ContentModalForm = ({ isOpen, onClose, content, setContent, setRefresh }: Props) => {
     const toast = useToast();
+    const { logout } = useAuthContex();
+    const navigate = useNavigate();
     const [currentValue, setCurrentValue] = useState<ContentInt>();
     const [options, setOptions] = useState<{value: string, label: string}[]>([]);
 
@@ -57,7 +61,18 @@ export const ContentModalForm = ({ isOpen, onClose, content, setContent, setRefr
 
                 setOptions(newOptions)
             })
-            .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "No se han podido cargar las opciones"))
+            .catch((error: AxiosError) => {
+                if(error?.response?.status === 401) {
+                    logout(
+                        navigate, 
+                        toast, 
+                        StatusEnumTypes.ERROR, 
+                        "Su Token ha caducado, vuelva a iniciar sesion"
+                    )
+                } else {
+                    toastNotify(toast, StatusEnumTypes.ERROR, "No se han podido cargar las opciones")
+                }
+            })
         }
         if(content?.landing === LandingEnumTypes.DAYTRIPS) {
             getDaytrips()
@@ -70,7 +85,18 @@ export const ContentModalForm = ({ isOpen, onClose, content, setContent, setRefr
 
                 setOptions(newOptions)
             })
-            .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "No se han podido cargar las opciones"))
+            .catch((error: AxiosError) => {
+                if(error?.response?.status === 401) {
+                    logout(
+                        navigate, 
+                        toast, 
+                        StatusEnumTypes.ERROR, 
+                        "Su Token ha caducado, vuelva a iniciar sesion"
+                    )
+                } else {
+                    toastNotify(toast, StatusEnumTypes.ERROR, "No se han podido cargar las opciones")
+                }
+            })
         }
     }, [content?.landing])
 
@@ -106,7 +132,18 @@ export const ContentModalForm = ({ isOpen, onClose, content, setContent, setRefr
             onClose();
             toastNotify(toast, StatusEnumTypes.SUCCESS, "Card actualizada")
         })
-        .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte"))
+        .catch((error: AxiosError) => {
+            if(error?.response?.status === 401) {
+                logout(
+                    navigate, 
+                    toast, 
+                    StatusEnumTypes.ERROR, 
+                    "Su Token ha caducado, vuelva a iniciar sesion"
+                )
+            } else {
+                toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte.")
+            }
+        })
     };
 
     return (

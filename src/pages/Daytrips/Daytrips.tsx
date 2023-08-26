@@ -10,10 +10,13 @@ import { DaytripsInformation } from "./views/DaytripsInformation";
 import { NewDaytrip } from "./views/NewDaytrips";
 import { addDaytrip, updateDaytrip } from "../../shared/middlewares/daytrips.middleware";
 import { DaystripsInt } from "../../interfaces/DaytripsInt";
+import { AxiosError } from "axios";
+import { useAuthContex } from "../../shared/context/auth.context";
 
 export const Daytrips = () => {
     const location = useLocation();
     const toast = useToast();
+    const { logout } = useAuthContex();
     const navigate = useNavigate();
     const [id, setId] = useState<string>()
     const [currentValue, setCurrentValue] = useState<DaystripsInt>()
@@ -36,7 +39,18 @@ export const Daytrips = () => {
                 navigate(`/daytrips`)
                 toastNotify(toast, StatusEnumTypes.SUCCESS, "Datos actualizados con exito");
             })
-            .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error al actualizar los datos"))
+            .catch((error: AxiosError) => {
+                if(error?.response?.status === 401) {
+                    logout(
+                        navigate, 
+                        toast, 
+                        StatusEnumTypes.ERROR, 
+                        "Su Token ha caducado, vuelva a iniciar sesion"
+                    )
+                } else {
+                    toastNotify(toast, StatusEnumTypes.ERROR, "Error al actualizar los datos")
+                }
+            })
     }
 
     const addData = () => {
@@ -47,7 +61,18 @@ export const Daytrips = () => {
                 navigate(`/daytrips`)
                 toastNotify(toast, StatusEnumTypes.SUCCESS, "Daytrips creado con exito");
             })
-            .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error al crear Daytrips"))
+            .catch((error: AxiosError) => {
+                if(error?.response?.status === 401) {
+                    logout(
+                        navigate, 
+                        toast, 
+                        StatusEnumTypes.ERROR, 
+                        "Su Token ha caducado, vuelva a iniciar sesion"
+                    )
+                } else {
+                    toastNotify(toast, StatusEnumTypes.ERROR, "Error al crear Daytrips")
+                }
+            })
     }
 
     return (

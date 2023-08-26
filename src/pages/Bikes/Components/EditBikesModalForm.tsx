@@ -4,6 +4,9 @@ import { StatusEnumTypes } from "../../../shared/Types/StatusEnumTypes";
 import { useEffect, useState } from "react";
 import { ProductInt } from "../../../interfaces/ProductInt";
 import { updateBike } from "../../../shared/middlewares/bikes.middleware";
+import { AxiosError } from "axios";
+import { useNavigate } from "react-router-dom";
+import { useAuthContex } from "../../../shared/context/auth.context";
 
 interface Props {
     isOpen: boolean;
@@ -14,6 +17,8 @@ interface Props {
 }
 
 export const EditBikesModalForm = ({ isOpen, onClose, setRefresh, bikeEdit, setBikeEdit }: Props) => {
+    const { logout } = useAuthContex();
+    const navigate = useNavigate()
     const toast = useToast();
     const [currentValue, setCurrentValue] = useState<ProductInt>();
 
@@ -57,7 +62,18 @@ export const EditBikesModalForm = ({ isOpen, onClose, setRefresh, bikeEdit, setB
             toastNotify(toast, StatusEnumTypes.SUCCESS, "Su codigo fue creado")
 
         })
-        .catch(() => toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte"))
+        .catch((error: AxiosError) => {
+            if(error?.response?.status === 401) {
+                logout(
+                    navigate, 
+                    toast, 
+                    StatusEnumTypes.ERROR, 
+                    "Su Token ha caducado, vuelva a iniciar sesion"
+                )
+            } else {
+                toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte.")
+            }
+        })
 
         setCurrentValue(undefined);
         onClose();

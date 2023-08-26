@@ -15,6 +15,7 @@ import { ActionsElements } from '../../../shared/components/ColumnElements/Actio
 import { NavigateFunction, useNavigate } from 'react-router-dom';
 import { ExperiencesInt } from '../../../interfaces/ExperiencesInt';
 import { useAuthContex } from '../../../shared/context/auth.context';
+import { InputFile } from '../../../shared/components/Inputs/InputFile';
 
 export const ExperiencesTable = () => {
     const { logout } = useAuthContex();
@@ -149,6 +150,7 @@ export const ExperiencesTable = () => {
         <Flex 
             w="100%"
             p="20px"
+            direction="column"
         >
             <CustomTable
                 data={experiences}

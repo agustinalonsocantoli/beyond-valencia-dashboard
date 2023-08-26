@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { OrdersGroupsInt } from "../../../interfaces/ExperiencesInt";
 import { EditGroupModal } from "../Modals/EditGroupModal";
 import { validateNewExperience } from "../../utils/validateData";
+import { InputFile } from "../Inputs/InputFile";
 
 interface Props {
     newValue: any;
@@ -211,40 +212,22 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled, fromCalle
         }));
     }
 
-    const changeImage = (e: any, i: number, isSelect = false) => {
-        if (!isSelect) {
-            const { name, value } = e.target;
+    const imageSelect = (e: any, i: number) => {
+        const { value } = e;
 
-            const newMultimedia = [
-                ...newValue?.multimedia?.slice(0, i),
-                {
-                    ...newValue?.multimedia[i],
-                    src: value
-                },
-                ...newValue?.multimedia?.slice(i + 1)
-            ]
+        const newMultimedia = [
+            ...newValue?.multimedia?.slice(0, i),
+            {
+                ...newValue?.multimedia[i],
+                type: value
+            },
+            ...newValue?.multimedia?.slice(i + 1)
+        ]
 
-            setNewValue((prev: any) => ({
-                ...prev,
-                [name]: newMultimedia
-            }));
-        } else {
-            const { value } = e;
-
-            const newMultimedia = [
-                ...newValue?.multimedia?.slice(0, i),
-                {
-                    ...newValue?.multimedia[i],
-                    type: value
-                },
-                ...newValue?.multimedia?.slice(i + 1)
-            ]
-
-            setNewValue((prev: any) => ({
-                ...prev,
-                multimedia: newMultimedia
-            }));
-        }
+        setNewValue((prev: any) => ({
+            ...prev,
+            multimedia: newMultimedia
+        }));
     }
 
     const selectedGroup = (e: any, i: number) => {
@@ -330,14 +313,15 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled, fromCalle
             <Box>
                 <FormLabel>Multimedia</FormLabel>
 
-                <Flex direction="column" gap="5px">
+                <Flex direction="column" gap="10px">
                     {newValue?.multimedia?.map((item: any, index: number) => (
-                        <Flex alignItems="center" gap="10px" key={index}>
-                            <Input
-                                flex="1"
+                        <Flex alignItems="center" gap="20px" key={index}>
+                            <InputFile
                                 name="multimedia"
-                                onChange={(e: any) => changeImage(e, index)}
-
+                                value={newValue}
+                                setValue={setNewValue}
+                                index={index}
+                                setIsDisabled={setIsDisabled}
                             />
 
                             <Box flex="1">
@@ -347,7 +331,7 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled, fromCalle
                                         { value: "image", label: "Imagen" },
                                         { value: "video", label: "Video" }
                                     ]}
-                                    onChange={(e: any) => changeImage(e, index, true)}
+                                    onChange={(e: any) => imageSelect(e, index)}
                                 />
                             </Box>
                         </Flex>

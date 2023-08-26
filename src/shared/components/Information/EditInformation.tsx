@@ -7,6 +7,7 @@ import { useEffect, useState } from "react";
 import { OrdersGroupsInt } from "../../../interfaces/ExperiencesInt";
 import { EditGroupModal } from "../Modals/EditGroupModal";
 import { format } from "date-fns";
+import { InputFile } from "../Inputs/InputFile";
 
 interface Props {
     currentValue: any,
@@ -252,15 +253,15 @@ export const EditInformation = ({ currentValue, setCurrentValue, setIsDisabled, 
             ...prev,
             groups: newGroup
         }));
-        
+
         setIsDisabled(false)
 
-        if( currentValue?.groups[i - 1]?.title === label || currentValue?.groups[i - 1]?.type === value ) 
+        if (currentValue?.groups[i - 1]?.title === label || currentValue?.groups[i - 1]?.type === value)
             toastNotify(toast, StatusEnumTypes.INFO, `El grupo seleccionado ya existe`)
     }
 
     const addGroup = () => {
-        if(currentValue?.groups?.length < 2){
+        if (currentValue?.groups?.length < 2) {
             const newGroup = [
                 ...currentValue?.groups,
                 {
@@ -310,30 +311,31 @@ export const EditInformation = ({ currentValue, setCurrentValue, setIsDisabled, 
                     onChange={selectedPublished}
                 />
             </Box>
-            
+
             {fromCalled === "events" &&
                 <Box>
-                        <FormLabel>Events Date</FormLabel>
-                        <Input
-                            name="eventDate"
-                            type="date"
-                            onChange={handleChange}
-                            defaultValue={format(new Date(currentValue?.eventDate), "yyyy-LL-dd")}
-                        />
+                    <FormLabel>Events Date</FormLabel>
+                    <Input
+                        name="eventDate"
+                        type="date"
+                        onChange={handleChange}
+                        defaultValue={format(new Date(currentValue?.eventDate), "yyyy-LL-dd")}
+                    />
                 </Box>
             }
 
             <Box>
                 <FormLabel>Multimedia</FormLabel>
 
-                <Flex direction="column" gap="5px">
+                <Flex direction="column" gap="10px">
                     {currentValue?.multimedia?.map((item: any, index: number) => (
-                        <Flex alignItems="center" gap="10px" key={index}>
-                            <Input
-                                flex="1"
+                        <Flex alignItems="center" gap="20px" key={index}>
+                            <InputFile
                                 name="multimedia"
-                                onChange={(e: any) => changeImage(e, index)}
-                                defaultValue={item?.src}
+                                value={currentValue}
+                                setValue={setCurrentValue}
+                                index={index}
+                                setIsDisabled={setIsDisabled}
                             />
 
                             <Box flex="1">
@@ -592,16 +594,16 @@ export const EditInformation = ({ currentValue, setCurrentValue, setIsDisabled, 
                                         index: index
                                     });
                                     onOpen();
-                                }} 
+                                }}
                                 display="flex"
-                                key={index} 
-                                gap="5px" 
+                                key={index}
+                                gap="5px"
                                 alignItems="center"
                                 bg={"rgba(50, 212, 164, .50)"}
-                                _hover={{ bg: "rgba(50, 212, 164, .25)"}}
+                                _hover={{ bg: "rgba(50, 212, 164, .25)" }}
                             >
                                 Edit group
-                                <Icon as={BiEdit} boxSize="20px"/>
+                                <Icon as={BiEdit} boxSize="20px" />
                             </Button>
                         </Flex>
                     ))}
@@ -661,7 +663,7 @@ export const EditInformation = ({ currentValue, setCurrentValue, setIsDisabled, 
             <EditGroupModal
                 isOpen={isOpen}
                 onClose={onClose}
-                defaultValue={groupEdit} 
+                defaultValue={groupEdit}
                 setCurrentValue={setCurrentValue}
                 currentValue={currentValue}
                 setGroupsEdit={setGroupsEdit}

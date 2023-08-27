@@ -31,7 +31,6 @@ export const Lockers = () => {
             getLockers()
                 .then((response: AxiosResponse) => {
                     setLockers(response?.data?.data);
-                    console.log(response?.data?.data);
                     setRefreshTable(false)
                 })
                 .catch((error: AxiosError) => {

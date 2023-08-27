@@ -1,6 +1,7 @@
 import {
     Box,
     Button,
+    Flex,
     FormLabel,
     Input,
     Modal,
@@ -25,6 +26,7 @@ import { DaystripsInt } from "../../../interfaces/DaytripsInt";
 import { updateContent } from "../../../shared/middlewares/content.middleware";
 import { useNavigate } from "react-router-dom";
 import { useAuthContex } from "../../../shared/context/auth.context";
+import { InputFile } from "../../../shared/components/Inputs/InputFile";
 
 interface Props {
     isOpen: boolean;
@@ -39,64 +41,63 @@ export const ContentModalForm = ({ isOpen, onClose, content, setContent, setRefr
     const { logout } = useAuthContex();
     const navigate = useNavigate();
     const [currentValue, setCurrentValue] = useState<ContentInt>();
-    const [options, setOptions] = useState<{value: string, label: string}[]>([]);
+    const [options, setOptions] = useState<{ value: string, label: string }[]>([]);
 
-    useEffect(() => { console.log(currentValue) }, [currentValue]) 
     useEffect(() => {
         setCurrentValue(content)
 
     }, [content])
 
     useEffect(() => {
-        const newOptions: {value: string, label: string}[] = []
+        const newOptions: { value: string, label: string }[] = []
 
-        if(content?.landing === LandingEnumTypes.EXPERIENCES) {
+        if (content?.landing === LandingEnumTypes.EXPERIENCES) {
             getExperiences()
-            .then((response: AxiosResponse) => {
-                const experiences = response?.data?.data;
+                .then((response: AxiosResponse) => {
+                    const experiences = response?.data?.data;
 
-                experiences.map((experience: ExperiencesInt) => {
-                    return newOptions.push({ value: `/experiences/${experience?._id}`, label: experience?.title })
+                    experiences.map((experience: ExperiencesInt) => {
+                        return newOptions.push({ value: `/experiences/${experience?.slug}`, label: experience?.title })
+                    })
+
+                    setOptions(newOptions)
                 })
-
-                setOptions(newOptions)
-            })
-            .catch((error: AxiosError) => {
-                if(error?.response?.status === 401) {
-                    logout(
-                        navigate, 
-                        toast, 
-                        StatusEnumTypes.ERROR, 
-                        "Su Token ha caducado, vuelva a iniciar sesion"
-                    )
-                } else {
-                    toastNotify(toast, StatusEnumTypes.ERROR, "No se han podido cargar las opciones")
-                }
-            })
+                .catch((error: AxiosError) => {
+                    if (error?.response?.status === 401) {
+                        logout(
+                            navigate,
+                            toast,
+                            StatusEnumTypes.ERROR,
+                            "Su Token ha caducado, vuelva a iniciar sesion"
+                        )
+                    } else {
+                        toastNotify(toast, StatusEnumTypes.ERROR, "No se han podido cargar las opciones")
+                    }
+                })
         }
-        if(content?.landing === LandingEnumTypes.DAYTRIPS) {
+        if (content?.landing === LandingEnumTypes.DAYTRIPS) {
             getDaytrips()
-            .then((response: AxiosResponse) => {
-                const daytrips = response?.data?.data;
+                .then((response: AxiosResponse) => {
+                    const daytrips = response?.data?.data;
 
-                daytrips.map((daytrip: DaystripsInt) => {
-                    return newOptions.push({ value: `/daytrips/${daytrip?._id}`, label: daytrip?.title })
+                    daytrips.map((daytrip: DaystripsInt) => {
+                        return newOptions.push({ value: `/daytrips/${daytrip?.slug}`, label: daytrip?.title })
+                    })
+
+                    setOptions(newOptions)
                 })
-
-                setOptions(newOptions)
-            })
-            .catch((error: AxiosError) => {
-                if(error?.response?.status === 401) {
-                    logout(
-                        navigate, 
-                        toast, 
-                        StatusEnumTypes.ERROR, 
-                        "Su Token ha caducado, vuelva a iniciar sesion"
-                    )
-                } else {
-                    toastNotify(toast, StatusEnumTypes.ERROR, "No se han podido cargar las opciones")
-                }
-            })
+                .catch((error: AxiosError) => {
+                    if (error?.response?.status === 401) {
+                        logout(
+                            navigate,
+                            toast,
+                            StatusEnumTypes.ERROR,
+                            "Su Token ha caducado, vuelva a iniciar sesion"
+                        )
+                    } else {
+                        toastNotify(toast, StatusEnumTypes.ERROR, "No se han podido cargar las opciones")
+                    }
+                })
         }
     }, [content?.landing])
 
@@ -124,26 +125,26 @@ export const ContentModalForm = ({ isOpen, onClose, content, setContent, setRefr
             id: content?._id,
             editContent: currentValue
         })
-        .then(() => {
-            setRefresh(true);
-            setContent(undefined);
-            setOptions([]);
-            setCurrentValue(undefined);
-            onClose();
-            toastNotify(toast, StatusEnumTypes.SUCCESS, "Card actualizada")
-        })
-        .catch((error: AxiosError) => {
-            if(error?.response?.status === 401) {
-                logout(
-                    navigate, 
-                    toast, 
-                    StatusEnumTypes.ERROR, 
-                    "Su Token ha caducado, vuelva a iniciar sesion"
-                )
-            } else {
-                toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte.")
-            }
-        })
+            .then(() => {
+                setRefresh(true);
+                setContent(undefined);
+                setOptions([]);
+                setCurrentValue(undefined);
+                onClose();
+                toastNotify(toast, StatusEnumTypes.SUCCESS, "Card actualizada")
+            })
+            .catch((error: AxiosError) => {
+                if (error?.response?.status === 401) {
+                    logout(
+                        navigate,
+                        toast,
+                        StatusEnumTypes.ERROR,
+                        "Su Token ha caducado, vuelva a iniciar sesion"
+                    )
+                } else {
+                    toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte.")
+                }
+            })
     };
 
     return (
@@ -178,6 +179,29 @@ export const ContentModalForm = ({ isOpen, onClose, content, setContent, setRefr
                         </Box>
                     }
 
+                    <Flex alignItems="center" gap="20px">
+                        <InputFile
+                            name="img"
+                            setValue={setCurrentValue}
+                            value={currentValue}
+                        />
+
+                        <Box flex="1">
+                            <InformationSelect
+                                name="type"
+                                defaultValue={{
+                                    value: currentValue.type,
+                                    label: currentValue.type === "image" ? "Imagen" : "Video"
+                                }}
+                                options={[
+                                    { value: "image", label: "Imagen" },
+                                    { value: "video", label: "Video" }
+                                ]}
+                                onChange={(e: any) => selectedChange(e, "type")}
+                            />
+                        </Box>
+                    </Flex>
+
                     <Box>
                         <FormLabel>Titulo</FormLabel>
                         <Input
@@ -199,33 +223,6 @@ export const ContentModalForm = ({ isOpen, onClose, content, setContent, setRefr
                             placeholder="Subtitulo"
                             onChange={inputChange}
                             defaultValue={currentValue.p}
-                        />
-                    </Box>
-
-                    <Box>
-                        <FormLabel>Tipo</FormLabel>
-                        <InformationSelect
-                            name="type"
-                            defaultValue={{
-                                value: currentValue.type,
-                                label: currentValue.type === "image" ? "Imagen" : "Video"
-                            }}
-                            options={[
-                                { value: "image", label: "Imagen" },
-                                { value: "video", label: "Video" }
-                            ]}
-                            onChange={(e: any) => selectedChange(e, "type")}
-                        />
-                    </Box>
-
-                    <Box>
-                        <FormLabel>Url Multimedia</FormLabel>
-                        <Input
-                            name="img"
-                            id="img"
-                            placeholder="Url"
-                            onChange={inputChange}
-                            defaultValue={currentValue?.img}
                         />
                     </Box>
                 </ModalBody>

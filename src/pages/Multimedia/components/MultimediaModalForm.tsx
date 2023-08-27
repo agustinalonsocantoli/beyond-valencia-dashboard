@@ -1,6 +1,7 @@
 import {
     Box,
     Button,
+    Flex,
     FormLabel,
     Input,
     Modal,
@@ -25,6 +26,7 @@ import { MultimediaInt } from "../../../interfaces/MultimediaInt";
 import { updateMultimedia } from "../../../shared/middlewares/multimedia.middleware";
 import { useNavigate } from "react-router-dom";
 import { useAuthContex } from "../../../shared/context/auth.context";
+import { InputFile } from "../../../shared/components/Inputs/InputFile";
 
 interface Props {
     isOpen: boolean;
@@ -39,7 +41,7 @@ export const MultimediaModalForm = ({ isOpen, onClose, multimedia, setMultimedia
     const { logout } = useAuthContex();
     const navigate = useNavigate();
     const [currentValue, setCurrentValue] = useState<MultimediaInt>();
-    const [options, setOptions] = useState<{value: string, label: string}[]>([]);
+    const [options, setOptions] = useState<{ value: string, label: string }[]>([]);
 
     useEffect(() => {
         setCurrentValue(multimedia)
@@ -47,55 +49,55 @@ export const MultimediaModalForm = ({ isOpen, onClose, multimedia, setMultimedia
     }, [multimedia])
 
     useEffect(() => {
-        const newOptions: {value: string, label: string}[] = []
+        const newOptions: { value: string, label: string }[] = []
 
-        if(multimedia?.landing === LandingEnumTypes.EXPERIENCES) {
+        if (multimedia?.landing === LandingEnumTypes.EXPERIENCES) {
             getExperiences()
-            .then((response: AxiosResponse) => {
-                const experiences = response?.data?.data;
+                .then((response: AxiosResponse) => {
+                    const experiences = response?.data?.data;
 
-                experiences.map((experience: ExperiencesInt) => {
-                    return newOptions.push({ value: `/experiences/${experience?._id}`, label: experience?.title })
+                    experiences.map((experience: ExperiencesInt) => {
+                        return newOptions.push({ value: `/experiences/${experience?.slug}`, label: experience?.title })
+                    })
+
+                    setOptions(newOptions)
                 })
-
-                setOptions(newOptions)
-            })
-            .catch((error: AxiosError) => {
-                if(error?.response?.status === 401) {
-                    logout(
-                        navigate, 
-                        toast, 
-                        StatusEnumTypes.ERROR, 
-                        "Su Token ha caducado, vuelva a iniciar sesion"
-                    )
-                } else {
-                    toastNotify(toast, StatusEnumTypes.ERROR, "No se han podido cargar las opciones")
-                }
-            })
+                .catch((error: AxiosError) => {
+                    if (error?.response?.status === 401) {
+                        logout(
+                            navigate,
+                            toast,
+                            StatusEnumTypes.ERROR,
+                            "Su Token ha caducado, vuelva a iniciar sesion"
+                        )
+                    } else {
+                        toastNotify(toast, StatusEnumTypes.ERROR, "No se han podido cargar las opciones")
+                    }
+                })
         }
-        if(multimedia?.landing === LandingEnumTypes.DAYTRIPS) {
+        if (multimedia?.landing === LandingEnumTypes.DAYTRIPS) {
             getDaytrips()
-            .then((response: AxiosResponse) => {
-                const daytrips = response?.data?.data;
+                .then((response: AxiosResponse) => {
+                    const daytrips = response?.data?.data;
 
-                daytrips.map((daytrip: DaystripsInt) => {
-                    return newOptions.push({ value: `/daytrips/${daytrip?._id}`, label: daytrip?.title })
+                    daytrips.map((daytrip: DaystripsInt) => {
+                        return newOptions.push({ value: `/daytrips/${daytrip?.slug}`, label: daytrip?.title })
+                    })
+
+                    setOptions(newOptions)
                 })
-
-                setOptions(newOptions)
-            })
-            .catch((error: AxiosError) => {
-                if(error?.response?.status === 401) {
-                    logout(
-                        navigate, 
-                        toast, 
-                        StatusEnumTypes.ERROR, 
-                        "Su Token ha caducado, vuelva a iniciar sesion"
-                    )
-                } else {
-                    toastNotify(toast, StatusEnumTypes.ERROR, "No se han podido cargar las opciones")
-                }
-            })
+                .catch((error: AxiosError) => {
+                    if (error?.response?.status === 401) {
+                        logout(
+                            navigate,
+                            toast,
+                            StatusEnumTypes.ERROR,
+                            "Su Token ha caducado, vuelva a iniciar sesion"
+                        )
+                    } else {
+                        toastNotify(toast, StatusEnumTypes.ERROR, "No se han podido cargar las opciones")
+                    }
+                })
         }
     }, [multimedia?.landing])
 
@@ -123,26 +125,26 @@ export const MultimediaModalForm = ({ isOpen, onClose, multimedia, setMultimedia
             id: multimedia?._id,
             editMultimedia: currentValue
         })
-        .then(() => {
-            setRefresh(true);
-            setMultimedia(undefined);
-            setOptions([]);
-            setCurrentValue(undefined);
-            onClose();
-            toastNotify(toast, StatusEnumTypes.SUCCESS, "Multimedia actualizada")
-        })
-        .catch((error: AxiosError) => {
-            if(error?.response?.status === 401) {
-                logout(
-                    navigate, 
-                    toast, 
-                    StatusEnumTypes.ERROR, 
-                    "Su Token ha caducado, vuelva a iniciar sesion"
-                )
-            } else {
-                toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte.")
-            }
-        })
+            .then(() => {
+                setRefresh(true);
+                setMultimedia(undefined);
+                setOptions([]);
+                setCurrentValue(undefined);
+                onClose();
+                toastNotify(toast, StatusEnumTypes.SUCCESS, "Multimedia actualizada")
+            })
+            .catch((error: AxiosError) => {
+                if (error?.response?.status === 401) {
+                    logout(
+                        navigate,
+                        toast,
+                        StatusEnumTypes.ERROR,
+                        "Su Token ha caducado, vuelva a iniciar sesion"
+                    )
+                } else {
+                    toastNotify(toast, StatusEnumTypes.ERROR, "Error en el servidor, actualice o contacte con soporte.")
+                }
+            })
     };
 
     return (
@@ -177,6 +179,29 @@ export const MultimediaModalForm = ({ isOpen, onClose, multimedia, setMultimedia
                         </Box>
                     }
 
+                    <Flex alignItems="center" gap="20px">
+                        <InputFile
+                            name="src"
+                            setValue={setCurrentValue}
+                            value={currentValue}
+                        />
+
+                        <Box flex="1">
+                            <InformationSelect
+                                name="type"
+                                defaultValue={{
+                                    value: currentValue.type,
+                                    label: currentValue.type === "image" ? "Imagen" : "Video"
+                                }}
+                                options={[
+                                    { value: "image", label: "Imagen" },
+                                    { value: "video", label: "Video" }
+                                ]}
+                                onChange={(e: any) => selectedChange(e, "type")}
+                            />
+                        </Box>
+                    </Flex>
+
                     <Box>
                         <FormLabel>Titulo</FormLabel>
                         <Input
@@ -210,33 +235,6 @@ export const MultimediaModalForm = ({ isOpen, onClose, multimedia, setMultimedia
                             placeholder="Subtitulo Text"
                             onChange={inputChange}
                             defaultValue={currentValue.span}
-                        />
-                    </Box>
-
-                    <Box>
-                        <FormLabel>Tipo</FormLabel>
-                        <InformationSelect
-                            name="type"
-                            defaultValue={{
-                                value: currentValue.type,
-                                label: currentValue.type === "image" ? "Imagen" : "Video"
-                            }}
-                            options={[
-                                { value: "image", label: "Imagen" },
-                                { value: "video", label: "Video" }
-                            ]}
-                            onChange={(e: any) => selectedChange(e, "type")}
-                        />
-                    </Box>
-
-                    <Box>
-                        <FormLabel>Url Multimedia</FormLabel>
-                        <Input
-                            name="src"
-                            id="src"
-                            placeholder="Url"
-                            defaultValue={currentValue?.src}
-                            onChange={inputChange}
                         />
                     </Box>
                 </ModalBody>

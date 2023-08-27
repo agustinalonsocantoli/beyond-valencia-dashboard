@@ -8,7 +8,7 @@ interface Props {
     name: string;
     value: any;
     setValue: (action: any) => void;
-    index: number;
+    index?: number;
     setIsDisabled?: (action: boolean) => void;
 }
 
@@ -17,7 +17,7 @@ export const InputFile = ({ name, value, setValue, index, setIsDisabled }: Props
     const [imageName, setImageName] = useState<string | null>(null)
     const [isEmpty, setIsEmpty] = useState<boolean>(true)
 
-    const handleImage = (img: string | ArrayBuffer | null, i: number) => {
+    const handleArrayImage = (img: string | ArrayBuffer | null, i: number) => {
         const newMultimedia = [
             ...value?.multimedia?.slice(0, i),
             {
@@ -33,6 +33,13 @@ export const InputFile = ({ name, value, setValue, index, setIsDisabled }: Props
         }));
 
         setIsDisabled && setIsDisabled(false)
+    }
+
+    const handleImage = (img: string | ArrayBuffer | null) => {
+        setValue((prev: any) => ({
+            ...prev,
+            [name]: img
+        }));
     }
 
     const customBase64Uploader = async (e: any) => {
@@ -51,7 +58,11 @@ export const InputFile = ({ name, value, setValue, index, setIsDisabled }: Props
 
         const reader = new FileReader();
         reader.readAsDataURL(file)
-        reader.onload = () => handleImage(reader.result, index);
+        reader.onload = () => {
+            index
+            ? handleArrayImage(reader.result, index)
+            : handleImage(reader.result)
+        }
         reader.onerror = () => toastNotify(toast, StatusEnumTypes.ERROR, "Error al cargar la imagen")
     };
 

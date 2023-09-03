@@ -65,9 +65,9 @@ export const RouterController = () => {
                 <Route path='partners/*' element={<Partners />} />
             </Route>
 
-            <Route element={<RequireAuth />}>
+            {/* <Route element={<RequireAuth />}>
                 <Route path='usuario/*' element={<Heading>User</Heading>} />
-            </Route>
+            </Route> */}
         </Routes>
     );
 };

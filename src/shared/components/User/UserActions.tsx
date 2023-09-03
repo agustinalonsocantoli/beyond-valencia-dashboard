@@ -71,10 +71,10 @@ export const UserActions = () => {
                 >
                     <Flex flexDirection="column" p="22px 18px" gap="15px">
 
-                        <Flex alignItems="center" gap="10px" cursor="pointer" onClick={() => navigate("/perfil")}>
+                        {/* <Flex alignItems="center" gap="10px" cursor="pointer" onClick={() => navigate("/perfil")}>
                             <Icon as={BiUserCircle} color="#8c909c" w="16px" h="16px" />
                             <Text fontWeight="normal" fontSize="16px">Perfil</Text>
-                        </Flex>
+                        </Flex> */}
 
                         <Flex alignItems="center" gap="10px" cursor="pointer" onClick={() => logout(navigate, toast)}>
                             <Icon as={AiOutlinePoweroff} color="#8c909c" w="16px" h="16px" />

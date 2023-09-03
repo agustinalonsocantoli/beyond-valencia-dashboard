@@ -29,7 +29,7 @@ export const CustomTable = ({
             w="100%"
             border="1px solid #e2e8f0"
             borderRadius="10px"
-            overflow="hidden"
+            overflowY={"auto"}
         >
             <DataTable
                 emptyMessage="No se han encontrado resultados"

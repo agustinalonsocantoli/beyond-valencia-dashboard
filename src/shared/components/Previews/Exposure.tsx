@@ -104,9 +104,11 @@ export const Exporuse = ({
                             width="100%"
                             background="rgba(0, 0, 0, .7)"
                         >
-                            <Heading>{item?.h3}</Heading>
-                            <Text>
-                                <Text as="strong" mr="5px">{item?.span}:</Text>
+                            <Heading
+                                fontSize="22px"
+                            >{item?.h3}</Heading>
+                            <Text fontSize="15px">
+                                <Text as="strong" fontSize="15px" mr="5px">{item?.span}</Text>
                                 {item?.p}
                             </Text>
                         </Box>

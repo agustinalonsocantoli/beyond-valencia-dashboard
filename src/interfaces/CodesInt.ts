@@ -1,6 +1,6 @@
 export interface CodesInt {
     code: string;
-    discount: Number;
+    discount: number;
     state: any;
     partner: any
 }

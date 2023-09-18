@@ -15,11 +15,12 @@ import { useNavigate } from 'react-router-dom';
 import { deleteDaytrip, getDaytrips } from '../../../shared/middlewares/daytrips.middleware';
 import { DaystripsInt } from '../../../interfaces/DaytripsInt';
 import { useAuthContex } from '../../../shared/context/auth.context';
+import { validateRol } from '../../../shared/utils/rol';
 
 export const DaytripsTable = () => {
     const toast = useToast();
     const navigate = useNavigate();
-    const { logout } = useAuthContex();
+    const { logout, user } = useAuthContex();
     const [daytrips, setDaytrips] = useState<DaystripsInt>();
     const [refreshTable, setRefreshTable] = useState<boolean>(true);
 
@@ -98,7 +99,7 @@ export const DaytripsTable = () => {
                 {
                     content: rowData?.published,
                     isTrue: { color: "green", label: "Publicado" },
-                    isFalse: { color: "red", label: "Comming Soon" }
+                    isFalse: { color: "red", label: "No Publicado" }
                 }
             )}
         />,
@@ -145,6 +146,12 @@ export const DaytripsTable = () => {
         />
     ]
 
+    const deleteActions = (columns: any[]) => {
+        columns.pop();
+
+        return columns
+    }
+
     return (
         <Flex 
             w="100%"
@@ -152,7 +159,7 @@ export const DaytripsTable = () => {
         >
             <CustomTable
                 data={daytrips}
-                columns={columns}
+                columns={validateRol(["admin"], user?.rol) ? columns : deleteActions(columns)}
                 onRowClick={onRowClick}
             />
         </Flex>

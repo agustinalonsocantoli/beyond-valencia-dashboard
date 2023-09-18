@@ -336,6 +336,7 @@ export const EditInformation = ({ currentValue, setCurrentValue, setIsDisabled, 
                                 setValue={setCurrentValue}
                                 index={index}
                                 setIsDisabled={setIsDisabled}
+                                isArray={true}
                             />
 
                             <Box flex="1">

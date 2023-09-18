@@ -9,6 +9,7 @@ import { EditInformation } from "../../../shared/components/Information/EditInfo
 import { getEventById } from "../../../shared/middlewares/events.middleware";
 import { EventsInt } from "../../../interfaces/EventsInt";
 import { useAuthContex } from "../../../shared/context/auth.context";
+import { validateRol } from "../../../shared/utils/rol";
 
 interface Props {
     currentValue: any,
@@ -19,7 +20,7 @@ interface Props {
 
 export const EventsInformation = ({ currentValue, setCurrentValue, setId, setIsDisabled }: Props) => {
     const { id } = useParams();
-    const { logout } = useAuthContex();
+    const { logout, user } = useAuthContex();
     const navigate = useNavigate();
     const toast = useToast();
     const [event, setEvent] = useState<EventsInt>();
@@ -40,11 +41,11 @@ export const EventsInformation = ({ currentValue, setCurrentValue, setId, setIsD
                     setRefresh(false)
                 })
                 .catch((error: AxiosError) => {
-                    if(error?.response?.status === 401) {
+                    if (error?.response?.status === 401) {
                         logout(
-                            navigate, 
-                            toast, 
-                            StatusEnumTypes.ERROR, 
+                            navigate,
+                            toast,
+                            StatusEnumTypes.ERROR,
                             "Su Token ha caducado, vuelva a iniciar sesion"
                         )
                     } else {
@@ -59,25 +60,27 @@ export const EventsInformation = ({ currentValue, setCurrentValue, setId, setIsD
             setCurrentValue(event)
     }, [event])
 
-    return(
+    return (
         <Flex gap="10px" p="10px">
-            <Flex 
-                direction="column" 
-                flex="1"
-            >
-                <EditInformation 
-                    currentValue={currentValue}
-                    setCurrentValue={setCurrentValue}
-                    setIsDisabled={setIsDisabled}
-                    fromCalled="events"
-                />
-            </Flex>
+            {validateRol(["admin"], user?.rol) &&
+                <Flex
+                    direction="column"
+                    flex="1"
+                >
+                    <EditInformation
+                        currentValue={currentValue}
+                        setCurrentValue={setCurrentValue}
+                        setIsDisabled={setIsDisabled}
+                        fromCalled="events"
+                    />
+                </Flex>
+            }
 
-            <Flex 
-                direction="column" 
+            <Flex
+                direction="column"
                 flex="1"
             >
-                <PreviewDetails 
+                <PreviewDetails
                     data={currentValue}
                 />
             </Flex>

@@ -7,6 +7,7 @@ export interface UserInt {
     email: string | null;
     firstName: string | null;
     lastName: string | null;
+    rol: any;
 }
 
 export interface UpdateUserInt {
@@ -15,6 +16,7 @@ export interface UpdateUserInt {
     password?: string;
     firstName?: string;
     lastName?: string;
+    rol: any;
 }
 
 export interface UserContextInt {

@@ -15,10 +15,11 @@ import { useNavigate } from 'react-router-dom';
 import { EventsInt } from '../../../interfaces/EventsInt';
 import { getEvents, deleteEvent } from '../../../shared/middlewares/events.middleware';
 import { useAuthContex } from '../../../shared/context/auth.context';
+import { validateRol } from '../../../shared/utils/rol';
 
 export const EventsTable = () => {
     const toast = useToast();
-    const { logout } = useAuthContex();
+    const { logout, user } = useAuthContex();
     const navigate = useNavigate();
     const [events, setEvents] = useState<EventsInt>();
     const [refreshTable, setRefreshTable] = useState<boolean>(true);
@@ -98,7 +99,7 @@ export const EventsTable = () => {
                 {
                     content: rowData?.published,
                     isTrue: { color: "green", label: "Publicado" },
-                    isFalse: { color: "red", label: "Comming Soon" }
+                    isFalse: { color: "red", label: "No Publicado" }
                 }
             )}
         />,
@@ -151,6 +152,12 @@ export const EventsTable = () => {
         />
     ]
 
+    const deleteActions = (columns: any[]) => {
+        columns.pop();
+
+        return columns
+    }
+
     return (
         <Flex
             w="100%"
@@ -158,7 +165,7 @@ export const EventsTable = () => {
         >
             <CustomTable
                 data={events}
-                columns={columns}
+                columns={validateRol(["admin"], user?.rol) ? columns : deleteActions(columns)}
                 onRowClick={onRowClick}
             />
         </Flex>

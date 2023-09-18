@@ -13,6 +13,7 @@ import { StatusEnumTypes } from './shared/Types/StatusEnumTypes';
 import { toastNotify } from './shared/utils/toastNotify';
 import { Sidebar } from './shared/components/Sidebar/Sidebar';
 import { SidebarView } from './shared/context/sidebar.context';
+import { assignRol } from './shared/utils/rol';
 
 function App() {
   const login = (
@@ -20,6 +21,7 @@ function App() {
     user: UserInt,
     navigate: (path: string) => void
   ) => {
+    const rol = assignRol(user?.rol)
 
     const perfilUser: UserInt = {
       auth: true,
@@ -28,6 +30,7 @@ function App() {
       username: user?.username ? user.username : '',
       firstName: user?.firstName,
       lastName: user?.lastName,
+      rol: rol,
     }
 
     localStorage.setItem('token', jwt)
@@ -54,6 +57,7 @@ function App() {
       username: null,
       firstName: null,
       lastName: null,
+      rol: null
     });
 
     navigate('/login')
@@ -79,6 +83,7 @@ function App() {
     username: perfilUser?.username ? perfilUser.username : null,
     firstName: perfilUser?.firstName ? perfilUser.firstName : null,
     lastName: perfilUser?.lastName ? perfilUser.lastName : null,
+    rol: perfilUser?.rol ? perfilUser?.rol : null
   });
 
   useEffect(() => {

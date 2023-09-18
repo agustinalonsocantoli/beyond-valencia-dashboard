@@ -9,6 +9,7 @@ import { EditInformation } from "../../../shared/components/Information/EditInfo
 import { getDaytripById } from "../../../shared/middlewares/daytrips.middleware";
 import { DaystripsInt } from "../../../interfaces/DaytripsInt";
 import { useAuthContex } from "../../../shared/context/auth.context";
+import { validateRol } from "../../../shared/utils/rol";
 
 interface Props {
     currentValue: any,
@@ -19,7 +20,7 @@ interface Props {
 
 export const DaytripsInformation = ({ currentValue, setCurrentValue, setId, setIsDisabled }: Props) => {
     const { id } = useParams();
-    const { logout } = useAuthContex();
+    const { logout, user } = useAuthContex();
     const navigate = useNavigate();
     const toast = useToast();
     const [daytrip, setDaytrip] = useState<DaystripsInt>();
@@ -40,11 +41,11 @@ export const DaytripsInformation = ({ currentValue, setCurrentValue, setId, setI
                     setRefresh(false)
                 })
                 .catch((error: AxiosError) => {
-                    if(error?.response?.status === 401) {
+                    if (error?.response?.status === 401) {
                         logout(
-                            navigate, 
-                            toast, 
-                            StatusEnumTypes.ERROR, 
+                            navigate,
+                            toast,
+                            StatusEnumTypes.ERROR,
                             "Su Token ha caducado, vuelva a iniciar sesion"
                         )
                     } else {
@@ -59,25 +60,27 @@ export const DaytripsInformation = ({ currentValue, setCurrentValue, setId, setI
             setCurrentValue(daytrip)
     }, [daytrip])
 
-    return(
+    return (
         <Flex gap="10px" p="10px">
-            <Flex 
-                direction="column" 
-                flex="1"
-            >
-                <EditInformation 
-                    currentValue={currentValue}
-                    setCurrentValue={setCurrentValue}
-                    setIsDisabled={setIsDisabled}
-                    fromCalled="daytrips"
-                />
-            </Flex>
+            {validateRol(["admin"], user?.rol) &&
+                <Flex
+                    direction="column"
+                    flex="1"
+                >
+                    <EditInformation
+                        currentValue={currentValue}
+                        setCurrentValue={setCurrentValue}
+                        setIsDisabled={setIsDisabled}
+                        fromCalled="daytrips"
+                    />
+                </Flex>
+            }
 
-            <Flex 
-                direction="column" 
+            <Flex
+                direction="column"
                 flex="1"
             >
-                <PreviewDetails 
+                <PreviewDetails
                     data={currentValue}
                 />
             </Flex>

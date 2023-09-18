@@ -10,9 +10,19 @@ interface Props {
     setValue: (action: any) => void;
     index?: number;
     setIsDisabled?: (action: boolean) => void;
+    isArray?: boolean;
+    isNew?: boolean;
 }
 
-export const InputFile = ({ name, value, setValue, index, setIsDisabled }: Props) => {
+export const InputFile = ({ 
+    name, 
+    value, 
+    setValue, 
+    index, 
+    setIsDisabled, 
+    isArray = false,
+    isNew = false
+}: Props) => {
     const toast = useToast();
     const [imageName, setImageName] = useState<string | null>(null)
     const [isEmpty, setIsEmpty] = useState<boolean>(true)
@@ -32,7 +42,7 @@ export const InputFile = ({ name, value, setValue, index, setIsDisabled }: Props
             [name]: newMultimedia
         }));
 
-        setIsDisabled && setIsDisabled(false)
+        if(!isNew) { setIsDisabled && setIsDisabled(false) }
     }
 
     const handleImage = (img: string | ArrayBuffer | null) => {
@@ -59,9 +69,8 @@ export const InputFile = ({ name, value, setValue, index, setIsDisabled }: Props
         const reader = new FileReader();
         reader.readAsDataURL(file)
         reader.onload = () => {
-            index
-            ? handleArrayImage(reader.result, index)
-            : handleImage(reader.result)
+            if(index && isArray) { handleArrayImage(reader.result, index) }
+            if(!isArray) { handleImage(reader.result) }
         }
         reader.onerror = () => toastNotify(toast, StatusEnumTypes.ERROR, "Error al cargar la imagen")
     };

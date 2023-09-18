@@ -12,13 +12,13 @@ import { TextElement } from '../../../shared/components/ColumnElements/TextEleme
 import { DateElement } from '../../../shared/components/ColumnElements/DateElement';
 import { PricesElements } from '../../../shared/components/ColumnElements/PricesElements';
 import { ActionsElements } from '../../../shared/components/ColumnElements/ActionsElements';
-import { NavigateFunction, useNavigate } from 'react-router-dom';
+import { useNavigate } from 'react-router-dom';
 import { ExperiencesInt } from '../../../interfaces/ExperiencesInt';
 import { useAuthContex } from '../../../shared/context/auth.context';
-import { InputFile } from '../../../shared/components/Inputs/InputFile';
+import { validateRol } from '../../../shared/utils/rol';
 
 export const ExperiencesTable = () => {
-    const { logout } = useAuthContex();
+    const { logout, user } = useAuthContex();
     const toast = useToast();
     const navigate = useNavigate();
     const [experiences, setExperiences] = useState<ExperiencesInt>();
@@ -99,7 +99,7 @@ export const ExperiencesTable = () => {
                 {
                     content: rowData?.published,
                     isTrue: { color: "green", label: "Publicado" },
-                    isFalse: { color: "red", label: "Comming Soon" }
+                    isFalse: { color: "red", label: "No Publicado" }
                 }
             )}
         />,
@@ -146,6 +146,12 @@ export const ExperiencesTable = () => {
         />
     ]
 
+    const deleteActions = (columns: any[]) => {
+        columns.pop();
+
+        return columns
+    }
+
     return (
         <Flex 
             w="100%"
@@ -154,7 +160,7 @@ export const ExperiencesTable = () => {
         >
             <CustomTable
                 data={experiences}
-                columns={columns}
+                columns={validateRol(["admin"], user?.rol) ? columns : deleteActions(columns)}
                 onRowClick={onRowClick}
             />
         </Flex>

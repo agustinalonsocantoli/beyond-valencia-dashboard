@@ -8,6 +8,8 @@ import { OrdersGroupsInt } from "../../../interfaces/ExperiencesInt";
 import { EditGroupModal } from "../Modals/EditGroupModal";
 import { validateNewExperience } from "../../utils/validateData";
 import { InputFile } from "../Inputs/InputFile";
+import { validateRol } from "../../utils/rol";
+import { useAuthContex } from "../../context/auth.context";
 
 interface Props {
     newValue: any;
@@ -17,6 +19,7 @@ interface Props {
 }
 
 export const NewInformation = ({ newValue, setNewValue, setIsDisabled, fromCalled }: Props) => {
+    const { user } = useAuthContex();
     const toast = useToast();
     const { isOpen, onOpen, onClose } = useDisclosure();
     const [groupEdit, setGroupsEdit] = useState<{
@@ -37,6 +40,13 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled, fromCalle
                 { src: '', type: 'image' },
             ]
         }));
+
+        if(!validateRol(["admin"], user?.rol)) {
+            setNewValue((prev: any) => ({
+                ...prev,
+                published: false
+            }));
+        }
     }, [])
 
     useEffect(() => {
@@ -287,17 +297,19 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled, fromCalle
 
     return (
         <Flex direction="column" pb="20px" gap="20px">
-            <Box>
-                <FormLabel>Publicado</FormLabel>
-                <InformationSelect
-                    name="published"
-                    options={[
-                        { value: true, label: "Si" },
-                        { value: false, label: "No" }
-                    ]}
-                    onChange={selectedPublished}
-                />
-            </Box>
+            {validateRol(["admin"], user?.rol) &&
+                <Box>
+                    <FormLabel>Publicado</FormLabel>
+                    <InformationSelect
+                        name="published"
+                        options={[
+                            { value: true, label: "Si" },
+                            { value: false, label: "No" }
+                        ]}
+                        onChange={selectedPublished}
+                    />
+                </Box>
+            }
 
             {fromCalled === "events" &&
                 <Box>
@@ -322,6 +334,8 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled, fromCalle
                                 setValue={setNewValue}
                                 index={index}
                                 setIsDisabled={setIsDisabled}
+                                isArray={true}
+                                isNew={true}
                             />
 
                             <Box flex="1">
@@ -329,7 +343,6 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled, fromCalle
                                     name="multimediaType"
                                     options={[
                                         { value: "image", label: "Imagen" },
-                                        { value: "video", label: "Video" }
                                     ]}
                                     onChange={(e: any) => imageSelect(e, index)}
                                 />

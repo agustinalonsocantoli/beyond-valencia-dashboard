@@ -9,6 +9,7 @@ export const AuthContext = React.createContext<UserContextInt>({
         email: null,
         firstName: null,
         lastName: null,
+        rol: null,
     },
     setUser: ( action: any ) => {},
     login: ( jwt: string, user: UserInt, navigate: (path: string) => void ) => {},

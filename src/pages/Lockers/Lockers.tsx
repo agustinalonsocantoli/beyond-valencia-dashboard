@@ -143,6 +143,7 @@ export const Lockers = () => {
                 <CustomTable
                     data={lockers}
                     columns={columns}
+                    isLoading={refreshTable}
                 />
             </Flex>
 

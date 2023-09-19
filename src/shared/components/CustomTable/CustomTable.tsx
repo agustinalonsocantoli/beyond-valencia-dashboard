@@ -1,6 +1,8 @@
 import { DataTable } from 'primereact/datatable';
+import { Skeleton } from 'primereact/skeleton';
 import "./CustomTable.css"
 import { Flex } from '@chakra-ui/react';
+import { Column } from 'primereact/column';
 
 interface Props {
     columns: JSX.Element[];
@@ -11,6 +13,7 @@ interface Props {
     sortField?: string;
     sortOrder?: number;
     filterDisplay?: "row" | "menu"
+    isLoading: boolean;
 }
 
 export const CustomTable = ({
@@ -21,8 +24,19 @@ export const CustomTable = ({
     totalRecords,
     sortField,
     sortOrder,
-    filterDisplay = "menu"
+    filterDisplay = "menu",
+    isLoading
 }: Props) => {
+
+    const bodyTemplate = () => {
+        return <Skeleton height={`75px`}></Skeleton>
+    }
+
+    const getSkeleton = () => {
+        return [{}].map((c: any, index: number) => (
+            <Column body={bodyTemplate} key={index} />
+        ))
+    }
 
     return (
         <Flex
@@ -31,11 +45,12 @@ export const CustomTable = ({
             borderRadius="10px"
             overflowY={"auto"}
         >
+            {!isLoading ?
             <DataTable
                 emptyMessage="No se han encontrado resultados"
                 value={data}
                 paginator
-                rows={10}
+                rows={5}
                 tableStyle={{
                     width: "100%"
                 }}
@@ -49,6 +64,18 @@ export const CustomTable = ({
             >
                 {columns}
             </DataTable>
+            :
+            <DataTable
+            value={[{}, {}, {}, {}, {}]}
+            paginator
+            rows={5}
+            tableStyle={{
+                width: "100%"
+            }}
+        >
+            {getSkeleton()}
+        </DataTable>
+            }
         </Flex>
     );
 }

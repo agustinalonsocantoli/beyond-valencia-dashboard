@@ -117,6 +117,7 @@ export const Partners = () => {
                 <CustomTable
                     data={partners}
                     columns={columns}
+                    isLoading={refreshTable}
                 />
             </Flex>
         </Flex>

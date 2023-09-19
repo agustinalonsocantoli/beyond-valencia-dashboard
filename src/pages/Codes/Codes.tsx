@@ -141,6 +141,7 @@ export const Codes = () => {
                 <CustomTable
                     data={codes}
                     columns={columns}
+                    isLoading={refreshTable}
                 />
             </Flex>
 

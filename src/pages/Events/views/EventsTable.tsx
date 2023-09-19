@@ -167,6 +167,7 @@ export const EventsTable = () => {
                 data={events}
                 columns={validateRol(["admin"], user?.rol) ? columns : deleteActions(columns)}
                 onRowClick={onRowClick}
+                isLoading={refreshTable}
             />
         </Flex>
     );

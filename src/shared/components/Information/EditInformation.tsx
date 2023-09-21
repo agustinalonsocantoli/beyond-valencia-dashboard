@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { OrdersGroupsInt } from "../../../interfaces/ExperiencesInt";
 import { EditGroupModal } from "../Modals/EditGroupModal";
 import { format } from "date-fns";
-import { InputFile } from "../Inputs/InputFile";
+import { FileButton } from "../Buttons/FileButton";
 
 interface Props {
     currentValue: any,
@@ -329,15 +329,16 @@ export const EditInformation = ({ currentValue, setCurrentValue, setIsDisabled, 
 
                 <Flex direction="column" gap="10px">
                     {currentValue?.multimedia?.map((item: any, index: number) => (
-                        <Flex alignItems="center" gap="20px" key={index}>
-                            <InputFile
-                                name="multimedia"
-                                value={currentValue}
-                                setValue={setCurrentValue}
-                                index={index}
-                                setIsDisabled={setIsDisabled}
-                                isArray={true}
-                            />
+                        <Flex alignItems="center" gap="10px" key={index}>
+                            <FileButton />
+                            
+                            <Box flex="1">
+                                <Input
+                                    name="multimedia"
+                                    onChange={(e: any) => changeImage(e, index)}
+                                    defaultValue={item?.src}
+                                />
+                            </Box>
 
                             <Box flex="1">
                                 <InformationSelect
@@ -348,7 +349,6 @@ export const EditInformation = ({ currentValue, setCurrentValue, setIsDisabled, 
                                     }}
                                     options={[
                                         { value: "image", label: "Imagen" },
-                                        { value: "video", label: "Video" }
                                     ]}
                                     onChange={(e: any) => changeImage(e, index, true)}
                                 />

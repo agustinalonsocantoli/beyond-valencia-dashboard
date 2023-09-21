@@ -26,7 +26,7 @@ import { MultimediaInt } from "../../../interfaces/MultimediaInt";
 import { updateMultimedia } from "../../../shared/middlewares/multimedia.middleware";
 import { useNavigate } from "react-router-dom";
 import { useAuthContex } from "../../../shared/context/auth.context";
-import { InputFile } from "../../../shared/components/Inputs/InputFile";
+import { FileButton } from "../../../shared/components/Buttons/FileButton";
 
 interface Props {
     isOpen: boolean;
@@ -179,12 +179,16 @@ export const MultimediaModalForm = ({ isOpen, onClose, multimedia, setMultimedia
                         </Box>
                     }
 
-                    <Flex alignItems="center" gap="20px">
-                        <InputFile
-                            name="src"
-                            setValue={setCurrentValue}
-                            value={currentValue}
-                        />
+                    <Flex alignItems="center" gap="10px">
+                        <FileButton />
+
+                        <Box flex="1">
+                            <Input
+                                name="src"
+                                onChange={(e: any) => inputChange(e)}
+                                defaultValue={currentValue?.src}
+                            />
+                        </Box>
 
                         <Box flex="1">
                             <InformationSelect
@@ -195,7 +199,6 @@ export const MultimediaModalForm = ({ isOpen, onClose, multimedia, setMultimedia
                                 }}
                                 options={[
                                     { value: "image", label: "Imagen" },
-                                    { value: "video", label: "Video" }
                                 ]}
                                 onChange={(e: any) => selectedChange(e, "type")}
                             />

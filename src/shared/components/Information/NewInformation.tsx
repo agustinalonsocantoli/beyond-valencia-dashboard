@@ -7,7 +7,7 @@ import { useEffect, useState } from "react";
 import { OrdersGroupsInt } from "../../../interfaces/ExperiencesInt";
 import { EditGroupModal } from "../Modals/EditGroupModal";
 import { validateNewExperience } from "../../utils/validateData";
-import { InputFile } from "../Inputs/InputFile";
+import { FileButton } from "../Buttons/FileButton";
 import { validateRol } from "../../utils/rol";
 import { useAuthContex } from "../../context/auth.context";
 
@@ -41,7 +41,7 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled, fromCalle
             ]
         }));
 
-        if(!validateRol(["admin"], user?.rol)) {
+        if (!validateRol(["admin"], user?.rol)) {
             setNewValue((prev: any) => ({
                 ...prev,
                 published: false
@@ -222,22 +222,40 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled, fromCalle
         }));
     }
 
-    const imageSelect = (e: any, i: number) => {
-        const { value } = e;
+    const changeImage = (e: any, i: number, isSelect = false) => {
+        if (!isSelect) {
+            const { name, value } = e.target;
 
-        const newMultimedia = [
-            ...newValue?.multimedia?.slice(0, i),
-            {
-                ...newValue?.multimedia[i],
-                type: value
-            },
-            ...newValue?.multimedia?.slice(i + 1)
-        ]
+            const newMultimedia = [
+                ...newValue?.multimedia?.slice(0, i),
+                {
+                    ...newValue?.multimedia[i],
+                    src: value
+                },
+                ...newValue?.multimedia?.slice(i + 1)
+            ]
 
-        setNewValue((prev: any) => ({
-            ...prev,
-            multimedia: newMultimedia
-        }));
+            setNewValue((prev: any) => ({
+                ...prev,
+                multimedia: newMultimedia
+            }));
+        } else {
+            const { value } = e;
+
+            const newMultimedia = [
+                ...newValue?.multimedia?.slice(0, i),
+                {
+                    ...newValue?.multimedia[i],
+                    type: value
+                },
+                ...newValue?.multimedia?.slice(i + 1)
+            ]
+
+            setNewValue((prev: any) => ({
+                ...prev,
+                multimedia: newMultimedia
+            }));
+        }
     }
 
     const selectedGroup = (e: any, i: number) => {
@@ -327,16 +345,16 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled, fromCalle
 
                 <Flex direction="column" gap="10px">
                     {newValue?.multimedia?.map((item: any, index: number) => (
-                        <Flex alignItems="center" gap="20px" key={index}>
-                            <InputFile
-                                name="multimedia"
-                                value={newValue}
-                                setValue={setNewValue}
-                                index={index}
-                                setIsDisabled={setIsDisabled}
-                                isArray={true}
-                                isNew={true}
-                            />
+                        <Flex alignItems="center" gap="10px" key={index}>
+                            <FileButton />
+
+                            <Box flex="1">
+                                <Input
+                                    name="multimedia"
+                                    onChange={(e: any) => changeImage(e, index)}
+                                    defaultValue={item?.src}
+                                />
+                            </Box>
 
                             <Box flex="1">
                                 <InformationSelect
@@ -344,7 +362,7 @@ export const NewInformation = ({ newValue, setNewValue, setIsDisabled, fromCalle
                                     options={[
                                         { value: "image", label: "Imagen" },
                                     ]}
-                                    onChange={(e: any) => imageSelect(e, index)}
+                                    onChange={(e: any) => changeImage(e, index, true)}
                                 />
                             </Box>
                         </Flex>

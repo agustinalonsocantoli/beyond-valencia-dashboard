@@ -26,7 +26,7 @@ import { DaystripsInt } from "../../../interfaces/DaytripsInt";
 import { updateContent } from "../../../shared/middlewares/content.middleware";
 import { useNavigate } from "react-router-dom";
 import { useAuthContex } from "../../../shared/context/auth.context";
-import { InputFile } from "../../../shared/components/Inputs/InputFile";
+import { FileButton } from "../../../shared/components/Buttons/FileButton";
 
 interface Props {
     isOpen: boolean;
@@ -179,12 +179,16 @@ export const ContentModalForm = ({ isOpen, onClose, content, setContent, setRefr
                         </Box>
                     }
 
-                    <Flex alignItems="center" gap="20px">
-                        <InputFile
-                            name="img"
-                            setValue={setCurrentValue}
-                            value={currentValue}
-                        />
+                    <Flex alignItems="center" gap="10px">
+                        <FileButton />
+                        
+                        <Box flex="1">
+                            <Input
+                                name="img"
+                                onChange={(e: any) => inputChange(e)}
+                                defaultValue={currentValue?.img}
+                            />
+                        </Box>
 
                         <Box flex="1">
                             <InformationSelect
@@ -195,7 +199,6 @@ export const ContentModalForm = ({ isOpen, onClose, content, setContent, setRefr
                                 }}
                                 options={[
                                     { value: "image", label: "Imagen" },
-                                    { value: "video", label: "Video" }
                                 ]}
                                 onChange={(e: any) => selectedChange(e, "type")}
                             />

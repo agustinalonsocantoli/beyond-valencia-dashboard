@@ -1,8 +1,10 @@
-import { Flex, Icon, Tooltip, useToast } from '@chakra-ui/react';
+import { Flex, Icon, Tooltip, useDisclosure, useToast } from '@chakra-ui/react';
 import { BsImages } from 'react-icons/bs';
+import { UploadImageModal } from '../Modals/UploadImageModal';
 
 
 export const FileButton = () => {
+    const { isOpen, onOpen, onClose } = useDisclosure();
     const toast = useToast();
 
     return (
@@ -21,6 +23,7 @@ export const FileButton = () => {
                     bg="#5ecc63"
                     p="10px"
                     cursor="pointer"
+                    onClick={onOpen}
                 >
                     <Icon
                         as={BsImages}
@@ -28,6 +31,11 @@ export const FileButton = () => {
                         color="#FFF"
                     />
                 </Flex>
+
+                <UploadImageModal 
+                    isOpen={isOpen}
+                    onClose={onClose}
+                />
             </Flex>
         </Tooltip>
     )
